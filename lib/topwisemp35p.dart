@@ -18,6 +18,10 @@ class Topwisemp35p {
     return Topwisemp35pPlatform.instance.debitcard(amount);
   }
 
+ Future<TransactionMonitor> getcardsheme(String amount) async {
+    return Topwisemp35pPlatform.instance.getcardsheme(amount);
+  }
+
   Future<TransactionMonitor> startprinting (Print print) async {
     return Topwisemp35pPlatform.instance.startprinting(print);
   }

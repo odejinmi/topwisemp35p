@@ -1,4 +1,4 @@
-group 'com.topwisemp35p.topwisemp35p'
+group 'com.a5starcompany.topwisemp35p'
 version '1.0-SNAPSHOT'
 
 buildscript {
@@ -30,7 +30,7 @@ apply plugin: "org.jetbrains.kotlin.plugin.parcelize"
 
 android {
     if (project.android.hasProperty("namespace")) {
-        namespace 'com.topwisemp35p.topwisemp35p'
+        namespace 'com.a5starcompany.topwisemp35p'
     }
 
 
@@ -54,7 +54,7 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 26
+        minSdkVersion 21
     }
 
     dependencies {

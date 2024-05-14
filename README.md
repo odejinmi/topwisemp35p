@@ -7,6 +7,24 @@ A Plugin used to interfering Topwise Mp35p pos device.
 ## How to use
 This plugin exposes two APIs:
 
+add the following to your manifest
+
+add this to the application tag in the manifest
+```manifest
+  android:name="com.a5starcompany.topwisemp35p.PaylonyApp"
+```
+
+```manifest
+        <service
+            android:name="com.a5starcompany.topwisemp35p.emvreader.card.CardMoniterService"
+            android:enabled="true" />
+
+        <activity
+            android:theme="@style/Theme.Paylony"
+            android:name="com.a5starcompany.topwisemp35p.emvreader.activity.PinpadActivity"
+            android:exported="true" />
+```
+
 ### 1. Initialize
 
 Initialize the plugin. This should be done once.
@@ -108,5 +126,5 @@ DebitCardRequestDto? transactionData;
 For further info about topwise's mobile SDKs, including setup, contact
 odejinmiabraham@gmail.com
 
-if you feel like contributing to this sdk kindly do so and notify so i can mergeand publish
+if you feel like contributing to this sdk kindly do so and notify so i can merge and publish
 # topwise# topwise

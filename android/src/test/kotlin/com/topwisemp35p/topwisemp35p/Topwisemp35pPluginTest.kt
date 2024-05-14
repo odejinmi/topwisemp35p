@@ -1,4 +1,4 @@
-package com.topwisemp35p.topwisemp35p
+package com.a5starcompany.topwisemp35p
 
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel

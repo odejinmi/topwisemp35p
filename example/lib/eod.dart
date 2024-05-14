@@ -49,17 +49,20 @@ class _EodState extends State<Eod> {
       body: SafeArea(
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              child,
-              ElevatedButton(
-                onPressed: () async {
-                  // printcomponent(child);
-                  _topwisePlugin.startcustomprinting(child.children).then((value) {print(value);});
-                },
-                child: const Text("Eod printing"),
-              ),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                child,
+                ElevatedButton(
+                  onPressed: () async {
+                    // printcomponent(child);
+                    _topwisePlugin.startcustomprinting(child.children).then((value) {print(value);});
+                  },
+                  child: const Text("Eod printing"),
+                ),
+                SizedBox(height: 30,),
+              ],
+            ),
           ),
         ),
       ),

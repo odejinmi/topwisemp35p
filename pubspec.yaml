@@ -1,6 +1,6 @@
 name: topwisemp35p
 description: "A Plugin used to interfering Topwise Mp35p pos device."
-version: 0.0.1
+version: 0.0.2
 repository: https://github.com/odejinmi/topwisemp35p.git
 homepage: https://5starcompany.com.ng
 
@@ -19,7 +19,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.1
+  flutter_lints: ^3.0.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -39,7 +39,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.topwisemp35p.topwisemp35p
+        package: com.a5starcompany.topwisemp35p
         pluginClass: Topwisemp35pPlugin
       ios:
         pluginClass: Topwisemp35pPlugin

@@ -8,7 +8,7 @@
 PRODUCT_NAME = topwisemp35p_example
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.topwisemp35p.topwisemp35pExample
+PRODUCT_BUNDLE_IDENTIFIER = com.a5starcompany.topwisemp35pExample
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2024 com.topwisemp35p. All rights reserved.

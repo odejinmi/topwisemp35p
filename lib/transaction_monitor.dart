@@ -25,7 +25,7 @@ class TransactionMonitor {
     state: json["state"],
     message: json["message"],
     status: json["status"],
-    transactionData: TransactionData.fromJson(json["transactionData"]),
+    transactionData: json["transactionData"] != null?TransactionData.fromJson(json["transactionData"]):null,
   );
 
   Map<String, dynamic> toJson() => {

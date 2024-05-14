@@ -51,6 +51,35 @@ class MethodChannelTopwisemp35p extends Topwisemp35pPlatform {
 
   }
 
+   @override
+  Future<TransactionMonitor> getcardsheme(String amount) async {
+    Map<String, String> args = {
+      "amount": amount
+    };
+    var result = await methodChannel.invokeMethod("getcardsheme", args);
+    if (kDebugMode) {
+      int max = 0;
+      String word = "";
+      for (final key in result["transactionData"].keys) {
+        max++;
+        if (max < 22) {
+          word += '"$key":"${result["transactionData"][key]}",';
+        } else {
+          print("tolu result");
+          print({word});
+          word = '"$key":"${result["transactionData"][key]}",';
+          max = 1;
+        }
+        // print('"$key":"${result["transactionData"][key]}"');
+      }
+
+      print("tolu result");
+      print({word});
+    }
+    return transactionMonitorFromJson(jsonEncode(result));
+
+  }
+
   @override
   Future<String> deviceserialnumber() async {
 

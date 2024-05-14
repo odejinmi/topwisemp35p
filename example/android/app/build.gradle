@@ -23,7 +23,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.topwisemp35p.topwisemp35p_example"
+    namespace "com.a5starcompany.topwisemp35p_example"
     compileSdk flutter.compileSdkVersion
 //    ndkVersion flutter.ndkVersion
     ndkVersion "25.1.8937393"
@@ -43,10 +43,10 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.topwisemp35p.topwisemp35p_example"
+        applicationId "com.a5starcompany.topwisemp35p_example"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion 26
+        minSdkVersion 21
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

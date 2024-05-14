@@ -112,6 +112,7 @@ class Receipt extends StatelessWidget {
                   },
                   child: const Text("custom printing"),
                 ),
+                SizedBox(height: 30,),
               ],
             ),
           ),
