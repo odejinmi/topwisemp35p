@@ -1,3 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.a5starcompany.topwisemp35p">
+    <application
+        android:name="com.a5starcompany.topwisemp35p.PosApp">
+        <service
+            android:name="com.a5starcompany.topwisemp35p.emvreader.card.CardMoniterService"
+            android:enabled="true" />
+
+        <activity
+            android:theme="@style/Theme.Paylony"
+            android:name="com.a5starcompany.topwisemp35p.emvreader.activity.PinpadActivity"
+            android:exported="true" />
+    </application>
 </manifest>

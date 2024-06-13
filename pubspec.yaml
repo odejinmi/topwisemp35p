@@ -1,6 +1,6 @@
 name: topwisemp35p
 description: "A Plugin used to interfering Topwise Mp35p pos device."
-version: 0.0.4
+version: 0.0.5
 repository: https://github.com/odejinmi/topwisemp35p.git
 homepage: https://5starcompany.com.ng
 
@@ -41,17 +41,17 @@ flutter:
       android:
         package: com.a5starcompany.topwisemp35p
         pluginClass: Topwisemp35pPlugin
-      ios:
-        pluginClass: Topwisemp35pPlugin
-      linux:
-        pluginClass: Topwisemp35pPlugin
-      macos:
-        pluginClass: Topwisemp35pPlugin
-      windows:
-        pluginClass: Topwisemp35pPluginCApi
-      web:
-        pluginClass: Topwisemp35pWeb
-        fileName: topwisemp35p_web.dart
+#      ios:
+#        pluginClass: Topwisemp35pPlugin
+#      linux:
+#        pluginClass: Topwisemp35pPlugin
+#      macos:
+#        pluginClass: Topwisemp35pPlugin
+#      windows:
+#        pluginClass: Topwisemp35pPluginCApi
+#      web:
+#        pluginClass: Topwisemp35pWeb
+#        fileName: topwisemp35p_web.dart
 
   # To add assets to your plugin package, add an assets section, like this:
 #  assets:

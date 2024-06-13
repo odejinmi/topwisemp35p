@@ -5,4 +5,8 @@
 * update pluging.
 * all bug fixed
 
+## 0.0.5
+* update pluging.
+* all bug fixed
+
 * TODO: Describe initial release.

@@ -4,7 +4,6 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:label="topwisemp35p_example"
-        android:name="com.a5starcompany.topwisemp35p.PosApp"
         android:supportsRtl="true"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -29,14 +28,6 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name="com.a5starcompany.topwisemp35p.emvreader.card.CardMoniterService"
-            android:enabled="true" />
-
-        <activity
-            android:theme="@style/Theme.Paylony"
-            android:name="com.a5starcompany.topwisemp35p.emvreader.activity.PinpadActivity"
-            android:exported="true" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
