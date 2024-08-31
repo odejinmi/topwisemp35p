@@ -30,7 +30,10 @@ abstract class Topwisemp35pPlatform extends PlatformInterface {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 
-  Future<TransactionMonitor> debitcard(String amount) {
+  Stream<dynamic> get stateStream {
+    throw UnimplementedError('stream has not been implemented.');
+  }
+  void debitcard(String amount) {
     throw UnimplementedError('debitcard() has not been implemented.');
   }
   Future<TransactionMonitor> getcardsheme(String amount) {

@@ -16,38 +16,45 @@ class MethodChannelTopwisemp35p extends Topwisemp35pPlatform {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
   final methodChannel = const MethodChannel('topwisemp35p');
+  final eventChannel = const EventChannel('topwisemp35pevent');
+
+  // @override
+  Stream<dynamic> get stateStream {
+    return eventChannel.receiveBroadcastStream();
+  }
 
   @override
   Future<String?> getPlatformVersion() async {
     final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
   }
+
   @override
-  Future<TransactionMonitor> debitcard(String amount) async {
+  void debitcard(String amount) async {
     Map<String, String> args = {
       "amount": amount
     };
-    var result = await methodChannel.invokeMethod("debitcard", args);
-    if (kDebugMode) {
-      int max = 0;
-      String word = "";
-      for (final key in result["transactionData"].keys) {
-        max++;
-        if (max < 22) {
-          word += '"$key":"${result["transactionData"][key]}",';
-        } else {
-          print("tolu result");
-          print({word});
-          word = '"$key":"${result["transactionData"][key]}",';
-          max = 1;
-        }
-        // print('"$key":"${result["transactionData"][key]}"');
-      }
-
-      print("tolu result");
-      print({word});
-    }
-    return transactionMonitorFromJson(jsonEncode(result));
+     methodChannel.invokeMethod("debitcard", args);
+    // if (kDebugMode) {
+    //   int max = 0;
+    //   String word = "";
+    //   for (final key in result["transactionData"].keys) {
+    //     max++;
+    //     if (max < 22) {
+    //       word += '"$key":"${result["transactionData"][key]}",';
+    //     } else {
+    //       print("tolu result");
+    //       print({word});
+    //       word = '"$key":"${result["transactionData"][key]}",';
+    //       max = 1;
+    //     }
+    //     // print('"$key":"${result["transactionData"][key]}"');
+    //   }
+    //
+    //   print("tolu result");
+    //   print({word});
+    // }
+    // return transactionMonitorFromJson(jsonEncode(result));
 
   }
 

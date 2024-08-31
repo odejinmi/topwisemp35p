@@ -67,7 +67,7 @@ android {
         kapt "com.google.dagger:hilt-android-compiler:2.44.2"
         // Enable the Hilt Android Gradle plugin
         annotationProcessor "com.google.dagger:hilt-android-compiler:2.44.2"
-        implementation fileTree(dir: 'libs', include: ['*.jar'])
+        api fileTree(dir: 'libs', include: ['*.jar'])
 //        implementation(fileTree("libs") { include("*.jar") })
         implementation "androidx.appcompat:appcompat:1.6.1"
         implementation "androidx.constraintlayout:constraintlayout:2.1.4"

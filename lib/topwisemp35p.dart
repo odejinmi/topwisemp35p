@@ -6,6 +6,9 @@ import 'print.dart';
 import 'topwisemp35p_platform_interface.dart';
 
 class Topwisemp35p {
+  Stream<dynamic> get stateStream {
+    return Topwisemp35pPlatform.instance.stateStream;
+  }
   Future<String?> getPlatformVersion() {
     return Topwisemp35pPlatform.instance.getPlatformVersion();
   }
@@ -14,7 +17,7 @@ class Topwisemp35p {
     return Topwisemp35pPlatform.instance.deviceserialnumber();
   }
 
-  Future<TransactionMonitor> initialize(String amount) async {
+  void initialize(String amount) async {
     return Topwisemp35pPlatform.instance.debitcard(amount);
   }
 

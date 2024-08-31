@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.BinaryMessenger
+import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.PluginRegistry
@@ -23,10 +24,13 @@ class MethodCallHandlerImpl(
     messenger: BinaryMessenger?,
     private val binding: ActivityPluginBinding
 ) :
-    MethodChannel.MethodCallHandler, PluginRegistry.ActivityResultListener, PluginRegistry.RequestPermissionsResultListener {
+    MethodChannel.MethodCallHandler, PluginRegistry.ActivityResultListener,
+    PluginRegistry.RequestPermissionsResultListener, EventChannel.StreamHandler{
 
     private var channel: MethodChannel? = null
     private var result: MethodChannel.Result? = null
+    private var eventchannel : EventChannel? = null
+    private var eventSink: EventChannel.EventSink? = null
 
 
     init {
@@ -34,7 +38,18 @@ class MethodCallHandlerImpl(
 
         channel?.setMethodCallHandler(this)
 
+        eventchannel = EventChannel(messenger!!, "topwisemp35pevent")
+        eventchannel?.setStreamHandler(this)
+
         binding.addActivityResultListener(this)
+    }
+
+    override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+        eventSink = events
+    }
+
+    override fun onCancel(arguments: Any?) {
+        eventSink = null
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
@@ -116,192 +131,71 @@ class MethodCallHandlerImpl(
 
     private val topWiseDevice by lazy {
         TopWiseDevice(binding.activity) {
-            when (it.state) {
-                CardReadState.CallBackCanceled -> {
-//                    emit(EmvUiState.CallBackCanceled)
+            var map1: MutableMap<String, Any> = mutableMapOf()
+            if (it.transactionData != null) {
+                val transactionData = it.transactionData!!
 
-                    Log.e("TAG", "startcustomPrint: call back canceled ${String}")
+                val maskedPan = transactionData.applicationPrimaryAccountNumber.let { pan ->
+                    val stars = "*".repeat(pan.length - 9)
+                    pan.take(5) + stars + pan.takeLast(4)
                 }
 
-                CardReadState.CallBackError -> {
-//                    emit(EmvUiState.CallBackError(it.errorCode))
+                map1 = mutableMapOf(
+                    "amount" to transactionData.amount,
+                    "amountAuthorized" to transactionData.amountAuthorized,
+                    "applicationDiscretionaryData" to transactionData.applicationDiscretionaryData,
+                    "applicationInterchangeProfile" to transactionData.applicationInterchangeProfile,
+                    "applicationIssuerData" to transactionData.applicationIssuerData,
+                    "applicationPANSequenceNumber" to transactionData.applicationPANSequenceNumber,
+                    "applicationPrimaryAccountNumber" to transactionData.applicationPrimaryAccountNumber,
+                    "applicationTransactionCounter" to transactionData.applicationTransactionCounter,
+                    "applicationVersionNumber" to transactionData.applicationVersionNumber,
+                    "authorizationResponseCode" to transactionData.authorizationResponseCode,
+                    "cardHolderName" to transactionData.cardHolderName,
+                    "cardScheme" to transactionData.cardScheme,
+                    "cardSeqenceNumber" to transactionData.cardSeqenceNumber,
+                    "cardholderVerificationMethod" to transactionData.cardholderVerificationMethod,
+                    "cashBackAmount" to transactionData.cashBackAmount,
+                    "cryptogram" to transactionData.cryptogram,
+                    "cryptogramInformationData" to transactionData.cryptogramInformationData,
+                    "dedicatedFileName" to transactionData.dedicatedFileName,
+                    "deviceSerialNumber" to transactionData.deviceSerialNumber,
+                    "dencryptedPinBlock" to transactionData.encryptedPinBlock,
+                    "expirationDate" to transactionData.expirationDate,
+                    "iccDataString" to transactionData.iccDataString,
+                    "interfaceDeviceSerialNumber" to transactionData.interfaceDeviceSerialNumber,
+                    "issuerApplicationData" to transactionData.issuerApplicationData,
+                    "nibssIccSubset" to transactionData.nibssIccSubset,
+                    "originalDeviceSerial" to transactionData.originalDeviceSerial,
+                    "originalPan" to transactionData.originalPan,
+                    "pinBlock" to transactionData.pinBlock,
+                    "pinBlockDUKPT" to transactionData.pinBlockDUKPT,
+                    "pinBlockTrippleDES" to transactionData.pinBlockDUKPT,
+                    "plainPinKey" to transactionData.plainPinKey,
+                    "terminalCapabilities" to transactionData.terminalCapabilities,
+                    "terminalCountryCode" to transactionData.terminalCountryCode,
+                    "terminalType" to transactionData.terminalType,
+                    "terminalVerificationResults" to transactionData.terminalVerificationResults,
+                    "track2Data" to transactionData.track2Data,
+                    "transactionCurrencyCode" to transactionData.transactionCurrencyCode,
+                    "transactionDate" to transactionData.transactionDate,
+                    "transactionSequenceCounter" to transactionData.transactionSequenceCounter,
+                    "transactionSequenceNumber" to transactionData.transactionSequenceNumber,
+                    "transactionType" to transactionData.transactionType,
+                    "unifiedPaymentIccData" to transactionData.unifiedPaymentIccData,
+                    "unpredictableNumber" to transactionData.unpredictableNumber
+                )
 
-                    Log.e("TAG", "startcustomPrint: call back error ${String}")
-                }
+            }
 
-                CardReadState.CallBackTransResult -> {
-//                    emit(EmvUiState.CallBackTransResult)
-
-                    Log.e("TAG", "startcustomPrint: call back transresult  ${String}")
-                }
-
-
-                CardReadState.CardData -> {
-
-                    Log.e("TAG", "startcustomPrint: card data")
-                    if (it.transactionData != null) {
-                        it.transactionData!!.applicationPrimaryAccountNumber.let {
-                            val numbersOfStars =
-                                    it.length - (it.take(5).length + it.takeLast(4).length)
-                            var stars = ""
-                            for (i in 1..numbersOfStars)
-                                stars += "*"
-//                            receiptObject.maskedPan = it.take(5) + stars + it.takeLast(4)
-                        }
-//                        receiptObject.cardType = "savings"
-//                        receiptObject.transactionAmount = "NGN${amount}"
-//                        receiptObject.dateAndTime = SimpleDateFormat("dd/MM/yyyy a").format(Date())
-//                        it.cardReadResult.accountType = "savings"
-
-                        val intent = Intent()
-                        val map: MutableMap<String, Any> = mutableMapOf()
-                        val map1: MutableMap<String, Any> = mutableMapOf()
-                        val transactionData = it.transactionData!!
-//                        map1["pinBlock"] = transactionData.pinBlock
-//                        map1["track2Data"] = transactionData.track2Data
-                        map1["amount"] = transactionData.amount
-//                        map1["accountType"] = transactionData.accountType
-                        map1["amountAuthorized"] = transactionData.amountAuthorized
-                        intent.putExtra("amountAuthorized", transactionData.amountAuthorized)
-                        map1["applicationDiscretionaryData"] = transactionData.applicationDiscretionaryData
-                        intent.putExtra("applicationDiscretionaryData", transactionData.applicationDiscretionaryData)
-                        map1["applicationInterchangeProfile"] = transactionData.applicationInterchangeProfile
-                        intent.putExtra("applicationInterchangeProfile", transactionData.applicationInterchangeProfile)
-                        map1["applicationIssuerData"] = transactionData.applicationIssuerData
-                        intent.putExtra("applicationIssuerData", transactionData.applicationIssuerData)
-                        map1["applicationPANSequenceNumber"] = transactionData.applicationPANSequenceNumber
-                        intent.putExtra("applicationPANSequenceNumber", transactionData.applicationPANSequenceNumber)
-                        map1["applicationPrimaryAccountNumber"] = transactionData.applicationPrimaryAccountNumber
-                        intent.putExtra("applicationPrimaryAccountNumber", transactionData.applicationPrimaryAccountNumber)
-                        map1["applicationTransactionCounter"] = transactionData.applicationTransactionCounter
-                        intent.putExtra("applicationTransactionCounter", transactionData.applicationTransactionCounter)
-                        map1["applicationVersionNumber"] = transactionData.applicationVersionNumber
-                        intent.putExtra("applicationVersionNumber", transactionData.applicationVersionNumber)
-                        map1["authorizationResponseCode"] = transactionData.authorizationResponseCode
-                        intent.putExtra("authorizationResponseCode", transactionData.authorizationResponseCode)
-                        map1["cardHolderName"] = transactionData.cardHolderName
-                        intent.putExtra("cardHolderName", transactionData.cardHolderName)
-                        map1["cardScheme"] = transactionData.cardScheme
-                        intent.putExtra("cardScheme", transactionData.cardScheme)
-                        map1["cardSeqenceNumber"] = transactionData.cardSeqenceNumber
-                        intent.putExtra("cardSeqenceNumber", transactionData.cardSeqenceNumber)
-                        map1["cardholderVerificationMethod"] = transactionData.cardholderVerificationMethod
-                        intent.putExtra("cardholderVerificationMethod", transactionData.cardholderVerificationMethod)
-                        map1["cashBackAmount"] = transactionData.cashBackAmount
-                        intent.putExtra("cashBackAmount", transactionData.cashBackAmount)
-                        map1["cryptogram"] = transactionData.cryptogram
-                        intent.putExtra("cryptogram", transactionData.cryptogram)
-                        map1["cryptogramInformationData"] = transactionData.cryptogramInformationData
-                        intent.putExtra("cryptogramInformationData", transactionData.cryptogramInformationData)
-                        map1["dedicatedFileName"] = transactionData.dedicatedFileName
-                        intent.putExtra("dedicatedFileName", transactionData.dedicatedFileName)
-                        map1["deviceSerialNumber"] = transactionData.deviceSerialNumber
-                        intent.putExtra("deviceSerialNumber", transactionData.deviceSerialNumber)
-                        map1["dencryptedPinBlock"] = transactionData.encryptedPinBlock
-                        intent.putExtra("encryptedPinBlock", transactionData.encryptedPinBlock)
-                        map1["expirationDate"] = transactionData.expirationDate
-                        intent.putExtra("expirationDate", transactionData.expirationDate)
-                        map1["iccDataString"] = transactionData.iccDataString
-                        intent.putExtra("iccDataString", transactionData.iccDataString)
-                        map1["interfaceDeviceSerialNumber"] = transactionData.interfaceDeviceSerialNumber
-                        intent.putExtra("interfaceDeviceSerialNumber", transactionData.interfaceDeviceSerialNumber)
-                        map1["issuerApplicationData"] = transactionData.issuerApplicationData
-                        intent.putExtra("issuerApplicationData", transactionData.issuerApplicationData)
-                        map1["nibssIccSubset"] = transactionData.nibssIccSubset
-                        intent.putExtra("nibssIccSubset", transactionData.nibssIccSubset)
-                        map1["originalDeviceSerial"] = transactionData.originalDeviceSerial
-                        intent.putExtra("originalDeviceSerial", transactionData.originalDeviceSerial)
-                        map1["originalPan"] = transactionData.originalPan
-                        intent.putExtra("originalPan", transactionData.originalPan)
-                        map1["pinBlock"] = transactionData.pinBlock
-                        intent.putExtra("pinBlock", transactionData.pinBlock)
-                        map1["pinBlockDUKPT"] = transactionData.pinBlockDUKPT
-                        intent.putExtra("pinBlockDUKPT", transactionData.pinBlockDUKPT)
-                        map1["pinBlockTrippleDES"] = transactionData.pinBlockDUKPT
-                        intent.putExtra("pinBlockDUKPT", transactionData.pinBlockDUKPT)
-                        map1["plainPinKey"] = transactionData.plainPinKey
-                        intent.putExtra("plainPinKey", transactionData.plainPinKey)
-                        map1["terminalCapabilities"] = transactionData.terminalCapabilities
-                        intent.putExtra("terminalCapabilities", transactionData.terminalCapabilities)
-                        map1["terminalCountryCode"] = transactionData.terminalCountryCode
-                        intent.putExtra("terminalCountryCode", transactionData.terminalCountryCode)
-                        map1["terminalType"] = transactionData.terminalType
-                        intent.putExtra("terminalType", transactionData.terminalType)
-                        map1["terminalVerificationResults"] = transactionData.terminalVerificationResults
-                        intent.putExtra("terminalVerificationResults", transactionData.terminalVerificationResults)
-                        map1["track2Data"] = transactionData.track2Data
-                        intent.putExtra("track2Data", transactionData.track2Data)
-                        map1["transactionCurrencyCode"] = transactionData.transactionCurrencyCode
-                        intent.putExtra("transactionCurrencyCode", transactionData.transactionCurrencyCode)
-                        map1["transactionDate"] = transactionData.transactionDate
-                        intent.putExtra("transactionDate", transactionData.transactionDate)
-                        map1["transactionSequenceCounter"] = transactionData.transactionSequenceCounter
-                        intent.putExtra("transactionSequenceCounter", transactionData.transactionSequenceCounter)
-                        map1["transactionSequenceNumber"] = transactionData.transactionSequenceNumber
-                        intent.putExtra("transactionSequenceNumber", transactionData.transactionSequenceNumber)
-                        map1["transactionType"] = transactionData.transactionType
-                        intent.putExtra("transactionType", transactionData.transactionType)
-                        map1["unifiedPaymentIccData"] = transactionData.unifiedPaymentIccData
-                        intent.putExtra("unifiedPaymentIccData", transactionData.unifiedPaymentIccData)
-                        map1["unpredictableNumber"] = transactionData.unpredictableNumber
-                        intent.putExtra("unpredictableNumber", transactionData.unpredictableNumber)
-
-                        map["state"] = "1"
-                        map["message"] = "successful"
-                        map["status"] = true
-                        map["transactionData"] = map1
-
-                        Log.e("TAG", "startcustomPrint: card detected ${map}")
-//            accountType = AccountType.valueOf(data?.getStringExtra(ACCOUNT_TYPE).toString())
-//            readCard()
-
-
-                        result?.success(map)
-                    }
-//                        debitCard(it.cardReadResult)
-                }
-
-
-                CardReadState.CardDetected -> {
-
-                    Log.e("TAG", "startcustomPrint: card detected ")
-//                    Toast.makeText(
-//                            binding.activity,
-//                            "amount is required, ",
-//                            Toast.LENGTH_SHORT
-//                    ).show()
-//////                        val intent = Intent()
-//////                        intent.setClass(this@MainActivity, PinpadActivity3::class.java)
-//////
-//////                        /********* Jeremy  modify 20200602
-//////                         * goto the input pin activity
-//////                         * pass the pin type to PinpadActivity
-//////                         */
-//////                        val bundle = Bundle()
-//////                        bundle.putInt("keytype", 0)
-//////                        bundle.putBoolean("online", true)
-//////                        if (bundle != null) {
-//////                            intent.putExtras(bundle)
-//////                        }
-//////                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//////                        startActivity(intent)
-////                        showProgressBar(false, "")
-//                    emit(EmvUiState.CardDetected(it.cardHolderName, it.cardMaskedPan))
-                }
-
-                CardReadState.CardReadTimeOut -> {
-
-                    Log.e("TAG", "startcustomPrint: card time out")
-//                    emit(EmvUiState.CardReadTimeOut)
-
-                }
-
-                CardReadState.Loading -> {
-                    Log.e("TAG", "startcustomPrint: loading")
-//                        showProgressBar(true, "Please insert your card")
-                }
-
-                else -> {}
+            val map: MutableMap<String, Any> = mutableMapOf(
+                "state" to it.state.toString(),
+                "message" to it.message,
+                "status" to it.status,
+                "transactionData" to map1
+            )
+            binding.activity.runOnUiThread {
+                eventSink?.success(map)
             }
         }
     }
@@ -987,80 +881,7 @@ class MethodCallHandlerImpl(
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
 //        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 100 && resultCode == RESULT_OK) {
-//            val map: MutableMap<String, Any> = mutableMapOf()
-//            val map1: MutableMap<String, Any> = mutableMapOf()
-//
-//            map1["amountAuthorized"] = data?.getStringExtra("amountAuthorized").toString()
-//            map1["applicationDiscretionaryData"] =
-//                data?.getStringExtra("applicationDiscretionaryData").toString()
-//            map1["applicationInterchangeProfile"] =
-//                data?.getStringExtra("applicationInterchangeProfile").toString()
-//            map1["applicationIssuerData"] =
-//                data?.getStringExtra("applicationIssuerData").toString()
-//            map1["applicationPANSequenceNumber"] =
-//                data?.getStringExtra("applicationPANSequenceNumber").toString()
-//            map1["applicationPrimaryAccountNumber"] =
-//                data?.getStringExtra("applicationPrimaryAccountNumber").toString()
-//            map1["applicationTransactionCounter"] =
-//                data?.getStringExtra("applicationTransactionCounter").toString()
-//            map1["applicationVersionNumber"] =
-//                data?.getStringExtra("applicationVersionNumber").toString()
-//            map1["authorizationResponseCode"] =
-//                data?.getStringExtra("authorizationResponseCode").toString()
-//            map1["cardHolderName"] = data?.getStringExtra("cardHolderName").toString()
-//            map1["cardScheme"] = data?.getStringExtra("cardScheme").toString()
-//            map1["cardSeqenceNumber"] = data?.getStringExtra("cardSeqenceNumber").toString()
-//            map1["cardholderVerificationMethod"] =
-//                data?.getStringExtra("cardholderVerificationMethod").toString()
-//            map1["cashBackAmount"] = data?.getStringExtra("cashBackAmount").toString()
-//            map1["cryptogram"] = data?.getStringExtra("cryptogram").toString()
-//            map1["cryptogramInformationData"] =
-//                data?.getStringExtra("cryptogramInformationData").toString()
-//            map1["dedicatedFileName"] = data?.getStringExtra("dedicatedFileName").toString()
-//            map1["deviceSerialNumber"] = data?.getStringExtra("deviceSerialNumber").toString()
-//            map1["dencryptedPinBlock"] = data?.getStringExtra("encryptedPinBlock").toString()
-//            map1["expirationDate"] = data?.getStringExtra("expirationDate").toString()
-//            map1["iccDataString"] = data?.getStringExtra("iccDataString").toString()
-//            map1["interfaceDeviceSerialNumber"] =
-//                data?.getStringExtra("interfaceDeviceSerialNumber").toString()
-//            map1["issuerApplicationData"] =
-//                data?.getStringExtra("issuerApplicationData").toString()
-//            map1["nibssIccSubset"] = data?.getStringExtra("nibssIccSubset").toString()
-//            map1["originalDeviceSerial"] =
-//                data?.getStringExtra("originalDeviceSerial").toString()
-//            map1["originalPan"] = data?.getStringExtra("originalPan").toString()
-//            map1["pinBlock"] = data?.getStringExtra("pinBlock").toString()
-//            map1["pinBlockDUKPT"] = data?.getStringExtra("pinBlockDUKPT").toString()
-//            map1["pinBlockTrippleDES"] = data?.getStringExtra("pinBlockDUKPT").toString()
-//            map1["plainPinKey"] = data?.getStringExtra("plainPinKey").toString()
-//            map1["terminalCapabilities"] =
-//                data?.getStringExtra("terminalCapabilities").toString()
-//            map1["terminalCountryCode"] = data?.getStringExtra("terminalCountryCode").toString()
-//            map1["terminalType"] = data?.getStringExtra("terminalType").toString()
-//            map1["terminalVerificationResults"] =
-//                data?.getStringExtra("terminalVerificationResults").toString()
-//            map1["track2Data"] = data?.getStringExtra("track2Data").toString()
-//            map1["transactionCurrencyCode"] =
-//                data?.getStringExtra("transactionCurrencyCode").toString()
-//            map1["transactionDate"] = data?.getStringExtra("transactionDate").toString()
-//            map1["transactionSequenceCounter"] =
-//                data?.getStringExtra("transactionSequenceCounter").toString()
-//            map1["transactionSequenceNumber"] =
-//                data?.getStringExtra("transactionSequenceNumber").toString()
-//            map1["transactionType"] = data?.getStringExtra("transactionType").toString()
-//            map1["unifiedPaymentIccData"] =
-//                data?.getStringExtra("unifiedPaymentIccData").toString()
-//            map1["unpredictableNumber"] = data?.getStringExtra("unpredictableNumber").toString()
-//
-//            map["state"] = "1"
-//            map["message"] = "successful"
-//            map["status"] = true
-//            map["transactionData"] = map1
-////            accountType = AccountType.valueOf(data?.getStringExtra(ACCOUNT_TYPE).toString())
-////            readCard()
-//
-//
-//            result?.success(map)
+
         }
         return true
 //
