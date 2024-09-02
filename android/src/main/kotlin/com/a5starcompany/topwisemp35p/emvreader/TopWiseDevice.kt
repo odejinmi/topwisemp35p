@@ -74,12 +74,12 @@ class TopWiseDevice(val context: Context, callback: (TransactionMonitor) -> Unit
     private val SEARCH_CARD_TIME: Int = 30000
 
     private fun read() {
-        this.callback.invoke(TransactionMonitor(
-                CardReadState.Loading,
-                "device error ",
-                true,
-                null as CardReadResult?
-        ))
+//        this.callback.invoke(TransactionMonitor(
+//                CardReadState.Loading,
+//                "device error ",
+//                true,
+//                null as CardReadResult?
+//        ))
 //        cardConsumeEmitter.emit(CardReadState.Loading)
         CardManager.instance.initCardExceptionCallBack(object : CardManager.CardExceptionCallBack {
             override fun callBackTimeOut() {

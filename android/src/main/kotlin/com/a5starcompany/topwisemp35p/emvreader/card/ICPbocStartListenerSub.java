@@ -249,7 +249,8 @@ public class ICPbocStartListenerSub implements OnEmvProcessListener {
 
             }
         }
-        CardManager.Companion.getInstance().startActivity(mContext, bundle, PinpadActivity.class);
+        CardManager.Companion.getInstance().cardDetected("hello");
+//        CardManager.Companion.getInstance().startActivity(mContext, bundle, PinpadActivity.class);
 
     }
 
