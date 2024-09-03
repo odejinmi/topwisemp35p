@@ -21,6 +21,14 @@ class Topwisemp35p {
     return Topwisemp35pPlatform.instance.debitcard(amount);
   }
 
+ void enterpin(String amount) async {
+    return Topwisemp35pPlatform.instance.enterpin(amount);
+  }
+
+ void cancelcardprocess() async {
+    return Topwisemp35pPlatform.instance.cancelcardprocess();
+  }
+
  Future<TransactionMonitor> getcardsheme(String amount) async {
     return Topwisemp35pPlatform.instance.getcardsheme(amount);
   }
