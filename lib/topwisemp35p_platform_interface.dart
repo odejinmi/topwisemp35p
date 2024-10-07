@@ -36,6 +36,12 @@ abstract class Topwisemp35pPlatform extends PlatformInterface {
   void debitcard(String amount) {
     throw UnimplementedError('debitcard() has not been implemented.');
   }
+  void enterpin(String amount) {
+    throw UnimplementedError('debitcard() has not been implemented.');
+  }
+  void cancelcardprocess() {
+    throw UnimplementedError('debitcard() has not been implemented.');
+  }
   Future<TransactionMonitor> getcardsheme(String amount) {
     throw UnimplementedError('debitcard() has not been implemented.');
   }

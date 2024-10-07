@@ -131,7 +131,7 @@ class TopWiseDevice(val context: Context, callback: (TransactionMonitor) -> Unit
             override fun onCardDetected(pan: String) {
                     callback.invoke(TransactionMonitor(
                             CardReadState.CardDetected,
-                            "card detected",
+                            pan,
                             true,
                             null as CardReadResult?
                     ))

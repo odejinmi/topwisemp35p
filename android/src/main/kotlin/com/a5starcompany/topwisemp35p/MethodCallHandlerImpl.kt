@@ -73,6 +73,10 @@ class MethodCallHandlerImpl(
                         enterpin(call)
             }
 
+             "cancelcardprocess" -> {
+                 cancelcardprocess(call)
+            }
+
              "getcardsheme" -> {
                  getcardsheme(call)
             }
@@ -128,8 +132,9 @@ class MethodCallHandlerImpl(
             result?.error(ERROR_CODE_PAYMENT_INITIALIZATION, "Invalid input(s)", null)
             return
         }
-
-        val pin = call.argument<String>("pin")!!
+// Convert the string to a ByteArray
+        val pin: ByteArray = call.argument<String>("pin")!!.toByteArray()
+//        val pin = call.argument<String>("pin")!!
         Log.i("TAG", "onConfirmInput(), pin = " + BCDASCII.bytesToHexString(pin))
         var mCardNo = PosApplication.getApp().mConsumeData?.cardno
         var finalPan = ""
@@ -139,7 +144,7 @@ class MethodCallHandlerImpl(
             var stars = ""
             for (i in 1..numbersOfStars)
                 stars += "*"
-            finalPan = mCardNo!!.take(5) + stars + mCardNo!!.takeLast(4)
+            finalPan = mCardNo.take(5) + stars + mCardNo!!.takeLast(4)
         }
         PosApplication.getApp().mConsumeData?.setPin(pin)
         PosApplication.getApp().mConsumeData?.setPinBlock(
@@ -181,17 +186,18 @@ class MethodCallHandlerImpl(
 //
 //                }
 //            }
+
         CardManager.instance.setImportPin(BCDASCII.bytesToHexString(pin))
     }
 
     private fun cancelcardprocess(call: MethodCall) {
 
-        if (!(call.arguments is Map<*,*>)) {
-            result?.error(ERROR_CODE_PAYMENT_INITIALIZATION, "Invalid input(s)", null)
-            return
-        }
-
-        val amount = call.argument<String>("amount")!!
+//        if (!(call.arguments is Map<*,*>)) {
+//            result?.error(ERROR_CODE_PAYMENT_INITIALIZATION, "Invalid input(s)", null)
+//            return
+//        }
+//
+//        val amount = call.argument<String>("amount")!!
 
         CardManager.instance.stopCardDealService(binding.activity)
     }

@@ -6,9 +6,5 @@
             android:name="com.a5starcompany.topwisemp35p.emvreader.card.CardMoniterService"
             android:enabled="true" />
 
-        <activity
-            android:theme="@style/Theme.Paylony"
-            android:name="com.a5starcompany.topwisemp35p.emvreader.activity.PinpadActivity"
-            android:exported="true" />
     </application>
 </manifest>

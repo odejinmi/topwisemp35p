@@ -8,7 +8,6 @@ import android.content.*;
 import android.os.*;
 import android.util.*;
 import com.a5starcompany.topwisemp35p.charackterEncoder.BCDASCII;
-import com.a5starcompany.topwisemp35p.emvreader.activity.PinpadActivity;
 import com.a5starcompany.topwisemp35p.emvreader.app.PosApplication;
 import com.a5starcompany.topwisemp35p.emvreader.cache.ConsumeData;
 import com.a5starcompany.topwisemp35p.emvreader.emv.CardReadResult;
@@ -249,7 +248,7 @@ public class ICPbocStartListenerSub implements OnEmvProcessListener {
 
             }
         }
-        CardManager.Companion.getInstance().cardDetected("hello");
+        CardManager.Companion.getInstance().cardDetected(PosApplication.getApp().mConsumeData.getCardno());
 //        CardManager.Companion.getInstance().startActivity(mContext, bundle, PinpadActivity.class);
 
     }

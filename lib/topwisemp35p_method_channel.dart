@@ -58,6 +58,21 @@ class MethodChannelTopwisemp35p extends Topwisemp35pPlatform {
 
   }
 
+@override
+  void enterpin(String amount) async {
+    Map<String, String> args = {
+      "pin": amount
+    };
+     methodChannel.invokeMethod("enterpin", args);
+
+  }
+
+  @override
+  void cancelcardprocess() async {
+     methodChannel.invokeMethod("cancelcardprocess");
+
+  }
+
    @override
   Future<TransactionMonitor> getcardsheme(String amount) async {
     Map<String, String> args = {
