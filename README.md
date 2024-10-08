@@ -7,6 +7,19 @@ A Plugin used to interfering Topwise Mp35p pos device.
 ## How to use
 This plugin exposes two APIs:
 
+add the following to your manifest
+
+add this to the application tag in the manifest
+```manifest
+  android:name="com.a5starcompany.topwisemp35p.PaylonyApp"
+```
+
+```manifest
+        <service
+            android:name="com.a5starcompany.topwisemp35p.emvreader.card.CardMoniterService"
+            android:enabled="true" />
+
+```
 
 ### 1. Initialize
 
@@ -31,11 +44,56 @@ Create an object of the Transaction class and pass it to the initializePayment f
 
 ``` dart
 Future<void> initPayment() async {
-    _topwisemp35pPlugin.initialize("2000").then((value) { print(value); });
+    _topwisemp35pPlugin.initialize("2000");
 }
 ```
 
-### 3. Withdraw receipt printing
+### 3. Listen to card state
+
+listening to card event to know the state of your card you can do whatever you like with the state 
+
+``` dart
+ _topwisemp35pPlugin.stateStream.listen((values)  async {
+      print(" card state $values");
+      // Handle the state change here
+      switch (values["state"]) {
+        case "Loading":
+          showDialog(context: context, builder: (builder)=> AlertDialog(title: Text("Loading"),));
+          return ;
+        case "CardData":
+          eventresult = values;
+          return ;
+        case "CardReadTimeOut":
+          return ;
+        case "CallBackError":
+          return ;
+        case "CallBackCanceled":
+          return ;
+        case "CallBackTransResult":
+          return ;
+        case "CardDetected":
+          var result = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Carpin(amount: "200",)),
+          );
+          if(result != null){
+            _topwisemp35pPlugin.enterpin(result);
+          }
+          return ;
+
+      }
+    });
+```
+
+### 4. customise card pin layout
+
+send pin entered back to the sdk card wait for response from the event you listen to earlier 
+
+``` dart
+ _topwisemp35pPlugin.enterpin(result);
+```
+
+### 4. Withdraw receipt printing
 
 Create an object of the Print class and pass it to the startprinting function
 
@@ -61,7 +119,7 @@ Create an object of the Print class and pass it to the startprinting function
                   _topwisePlugin.startprinting(args).then((value) {print(value);});
 ```
 
-### 4. Transfer receipt printing
+### 6. Transfer receipt printing
 
 Create an object of the Print class and pass it to the startprinting function
 
@@ -87,7 +145,7 @@ Create an object of the Print class and pass it to the startprinting function
                   _topwisePlugin.startprinting(args).then((value) {print(value);});
 ```
 
-### 5. Customise printing
+### 7. Customise printing
 
 when creating your ui for customise printing in consider the following
 ## 1. You can't use more than two widget in a row

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:topwisemp35p/print.dart';
 import 'package:topwisemp35p/topwisemp35p.dart';
+import 'package:topwisemp35p_example/carpin.dart';
 import 'package:topwisemp35p_example/receipt.dart';
 
 import 'eod.dart';
@@ -21,10 +22,42 @@ class _HomeState extends State<Home> {
   String _platformVersion = 'Unknown';
   final _topwisemp35pPlugin = Topwisemp35p();
 
+  var eventresult = { };
+
   @override
   void initState() {
     super.initState();
     initPlatformState();
+    _topwisemp35pPlugin.stateStream.listen((values)  async {
+      print(" card state $values");
+      // Handle the state change here
+      switch (values["state"]) {
+        case "Loading":
+          showDialog(context: context, builder: (builder)=> AlertDialog(title: Text("Loading"),));
+          return ;
+        case "CardData":
+          eventresult = values;
+          return ;
+        case "CardReadTimeOut":
+          return ;
+        case "CallBackError":
+          return ;
+        case "CallBackCanceled":
+          return ;
+        case "CallBackTransResult":
+          return ;
+        case "CardDetected":
+          var result = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Carpin(amount: "200",)),
+          );
+          if(result != null){
+            _topwisemp35pPlugin.enterpin(result);
+          }
+          return ;
+
+      }
+    });
     start();
   }
 
@@ -71,10 +104,7 @@ class _HomeState extends State<Home> {
             ),
             ElevatedButton(
               onPressed: () async {
-                var result = await _topwisemp35pPlugin.initialize("200");
-                print("tolu result yuuiouiyr");
-                print(result);
-                print("tolu result gotting");
+                _topwisemp35pPlugin.initialize("200");
               },
               child: const Text("start transaction"),
 

@@ -9,4 +9,8 @@
 * update pluging.
 * all bug fixed
 
-* TODO: Describe initial release.
+## 0.0.6
+* customise pin layout added
+* card event listening
+
+
