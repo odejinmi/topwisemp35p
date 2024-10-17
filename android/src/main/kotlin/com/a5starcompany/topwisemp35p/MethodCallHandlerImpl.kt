@@ -12,13 +12,11 @@ import io.flutter.plugin.common.PluginRegistry
 import com.a5starcompany.topwisemp35p.emvreader.TopWiseDevice
 import android.util.Base64
 import android.util.Log
-import android.widget.Toast
 import com.a5starcompany.topwisemp35p.charackterEncoder.BCDASCII
 import com.a5starcompany.topwisemp35p.emvreader.DeviceTopUsdkServiceManager
 import com.a5starcompany.topwisemp35p.emvreader.app.PosApplication
 import com.a5starcompany.topwisemp35p.emvreader.card.CardManager
 import com.a5starcompany.topwisemp35p.emvreader.printer.*
-import com.a5starcompany.topwisemp35p.emvreader.emv.CardReadState
 import com.a5starcompany.topwisemp35p.emvreader.util.Format
 
 
