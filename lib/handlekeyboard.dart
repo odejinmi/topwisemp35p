@@ -1,21 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
 class Keyevent {
-   // late TextEditingController amountController;
+  // late TextEditingController amountController;
   final ValueChanged<String>? onchange;
   // late BuildContext context;
 
   Function? proceed, cancel;
-  late BuildContext context;
 
   Keyevent(
       {
-        required this.context,
+        // required this.amountController,
         this.onchange,
         this.cancel,
-      this.proceed});
+        this.proceed});
 
   bool handleKeyEvent(KeyEvent event) {
     print(event);
@@ -40,8 +40,8 @@ class Keyevent {
       } else if (event.logicalKey.keyId == LogicalKeyboardKey.goBack.keyId || event.logicalKey.keyId == LogicalKeyboardKey.escape.keyId) {
         if (cancel != null) {
           cancel!();
-        }else{
-          Navigator.pop(context);
+        // }else{
+        //   Get.back();
         }
       }
       // else if (// Add logic for other valid symbols here) {
@@ -54,7 +54,7 @@ class Keyevent {
 
     if (key.isNotEmpty && onchange !=null) {
       // amountController.text += key;
-        onchange!(key);
+      onchange!(key);
     }
     return true;
   }

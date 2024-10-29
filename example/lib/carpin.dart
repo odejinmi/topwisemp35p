@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:topwisemp35p/topwisemp35p.dart';
 
-import 'handlekeyboard.dart';
 
 class Carpin extends StatefulWidget {
   final String amount;
@@ -18,16 +17,14 @@ class _CarpinState extends State<Carpin> {
 
   int position = 0;
   String amountController = "";
-  HardwareKeyboard hardwareKeyboard = HardwareKeyboard.instance;
-  late Keyevent keyEventHandler; // Keep a reference to the same Keyevent instance
+  final _topwisemp35pPlugin = Topwisemp35p();
 
   Timer? _timer;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    keyEventHandler = Keyevent(onchange: result, proceed: proceed, cancel:cancel, context: context);
-    hardwareKeyboard.addHandler(keyEventHandler.handleKeyEvent);
+    _topwisemp35pPlugin.startkeyboard(onchange: result, proceed: proceed, cancel:cancel);
   }
 
   @override
@@ -194,13 +191,13 @@ class _CarpinState extends State<Carpin> {
         amountController = amountController.substring(
             0, amountController.length - 1);
       }else{
-        // amountController = '';
+        amountController = '';
       }
     }
   }
   @override
   void dispose() {
-    hardwareKeyboard.removeHandler(keyEventHandler.handleKeyEvent);
+    _topwisemp35pPlugin.stopkeyboard();
     super.dispose();
   }
 
@@ -208,11 +205,10 @@ class _CarpinState extends State<Carpin> {
   proceed(){
     print("return back to withdraw");
     Navigator.pop(context, amountController);
-    hardwareKeyboard.removeHandler(keyEventHandler.handleKeyEvent);
+    _topwisemp35pPlugin.stopkeyboard();
   }
 
   cancel(){
-    final _topwisemp35pPlugin = Topwisemp35p();
     _topwisemp35pPlugin.cancelcardprocess();
     Navigator.pop(context);
   }

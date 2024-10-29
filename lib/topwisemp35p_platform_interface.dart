@@ -36,17 +36,26 @@ abstract class Topwisemp35pPlatform extends PlatformInterface {
   void debitcard(String amount) {
     throw UnimplementedError('debitcard() has not been implemented.');
   }
+  void initialize() {
+    throw UnimplementedError('initialize() has not been implemented.');
+  }
   void enterpin(String amount) {
-    throw UnimplementedError('debitcard() has not been implemented.');
+    throw UnimplementedError('enterpin() has not been implemented.');
   }
   void cancelcardprocess() {
-    throw UnimplementedError('debitcard() has not been implemented.');
+    throw UnimplementedError('cancelcardprocess() has not been implemented.');
+  }
+  void startkeyboard({ValueChanged<String>? onchange, Function? proceed, Function? cancel}) {
+    throw UnimplementedError('startkeyboard() has not been implemented.');
+  }
+  void stopkeyboard() {
+    throw UnimplementedError('stopkeyboard() has not been implemented.');
   }
   Future<TransactionMonitor> getcardsheme(String amount) {
-    throw UnimplementedError('debitcard() has not been implemented.');
+    throw UnimplementedError('getcardsheme() has not been implemented.');
   }
   Future<TransactionMonitor> printreceipt(Print print) {
-    throw UnimplementedError('print() has not been implemented.');
+    throw UnimplementedError('printreceipt() has not been implemented.');
   }
   Future<String> deviceserialnumber() {
     throw UnimplementedError('deviceserialnumber() has not been implemented.');

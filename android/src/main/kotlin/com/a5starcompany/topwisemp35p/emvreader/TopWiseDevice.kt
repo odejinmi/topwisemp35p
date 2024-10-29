@@ -103,7 +103,7 @@ class TopWiseDevice(val context: Context, callback: (TransactionMonitor) -> Unit
             override fun callBackCanceled() {
                     callback.invoke(TransactionMonitor(
                             CardReadState.CallBackCanceled,
-                            "card canceled",
+                            "card canceled ",
                             true,
                             null as CardReadResult?
                     ))

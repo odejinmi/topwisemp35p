@@ -8,6 +8,7 @@ import android.content.*;
 import android.os.*;
 import android.util.*;
 import com.a5starcompany.topwisemp35p.charackterEncoder.BCDASCII;
+//import com.a5starcompany.topwisemp35p.emvreader.activity.PinpadActivity;
 import com.a5starcompany.topwisemp35p.emvreader.app.PosApplication;
 import com.a5starcompany.topwisemp35p.emvreader.cache.ConsumeData;
 import com.a5starcompany.topwisemp35p.emvreader.emv.CardReadResult;

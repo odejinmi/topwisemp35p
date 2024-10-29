@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
+import 'handlekeyboard.dart';
 import 'print.dart';
 import 'printmodel.dart';
 import 'topwisemp35p_platform_interface.dart';
@@ -57,6 +58,11 @@ class MethodChannelTopwisemp35p extends Topwisemp35pPlatform {
     // return transactionMonitorFromJson(jsonEncode(result));
 
   }
+@override
+  void initialize() async {
+     methodChannel.invokeMethod("initialize");
+      print("plugin initialize");
+  }
 
 @override
   void enterpin(String amount) async {
@@ -70,6 +76,25 @@ class MethodChannelTopwisemp35p extends Topwisemp35pPlatform {
   @override
   void cancelcardprocess() async {
      methodChannel.invokeMethod("cancelcardprocess");
+
+  }
+
+  HardwareKeyboard hardwareKeyboard = HardwareKeyboard.instance;
+  late Keyevent keyEventHandler; // Keep a reference to the same Keyevent instance
+
+  @override
+  void startkeyboard({ValueChanged<String>? onchange,
+      Function? proceed,
+      Function? cancel}) async {
+    // Initialize the keyEventHandler once and use it everywhere
+    keyEventHandler = Keyevent(onchange: onchange, proceed: proceed, cancel:cancel);
+    hardwareKeyboard.addHandler(keyEventHandler.handleKeyEvent);
+
+  }
+
+  @override
+  void stopkeyboard() async {
+    hardwareKeyboard.removeHandler(keyEventHandler.handleKeyEvent);
 
   }
 

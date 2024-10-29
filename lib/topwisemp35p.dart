@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:topwisemp35p/transaction_monitor.dart';
+export 'package:topwisemp35p/transaction_monitor.dart';
 
 import 'print.dart';
 import 'topwisemp35p_platform_interface.dart';
@@ -17,8 +18,12 @@ class Topwisemp35p {
     return Topwisemp35pPlatform.instance.deviceserialnumber();
   }
 
-  void initialize(String amount) async {
-    return Topwisemp35pPlatform.instance.debitcard(amount);
+  void initialize() async {
+    Topwisemp35pPlatform.instance.initialize();
+  }
+
+ void debitcard(String amount) async {
+    Topwisemp35pPlatform.instance.debitcard(amount);
   }
 
  void enterpin(String amount) async {
@@ -27,6 +32,16 @@ class Topwisemp35p {
 
  void cancelcardprocess() async {
     return Topwisemp35pPlatform.instance.cancelcardprocess();
+  }
+
+ void startkeyboard({ValueChanged<String>? onchange,
+   Function? proceed,
+   Function? cancel}) async {
+    return Topwisemp35pPlatform.instance.startkeyboard(onchange: onchange,proceed: proceed, cancel: cancel);
+  }
+
+ void stopkeyboard() async {
+    return Topwisemp35pPlatform.instance.stopkeyboard();
   }
 
  Future<TransactionMonitor> getcardsheme(String amount) async {
