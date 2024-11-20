@@ -8,6 +8,8 @@ import com.a5starcompany.topwisemp35p.emvreader.TopWiseDevice
 import com.a5starcompany.topwisemp35p.emvreader.emv.TransactionMonitor
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
+import java.text.NumberFormat
+import java.util.Locale
 
 class print(topWiseDevice : TopWiseDevice, binding: ActivityPluginBinding) {
 
@@ -84,10 +86,11 @@ class print(topWiseDevice : TopWiseDevice, binding: ActivityPluginBinding) {
                 .setBold(true)
         )
 
-        val amount = call.argument<String>("amount")!!
+        val amount = call.argument<String>("amount")!!.toDouble() // Convert to Double for formatting
+        val formattedAmount = NumberFormat.getNumberInstance(Locale.US).format(amount) // Format with commas
         template.add(
             TextUnit(
-                "₦" + amount,
+                "₦$formattedAmount",
                 TextUnit.TextSize.NORMAL,
                 Align.CENTER
             )
@@ -150,6 +153,17 @@ class print(topWiseDevice : TopWiseDevice, binding: ActivityPluginBinding) {
                     .setBold(true)
             )
         }
+        val message = call.argument<String>("message")
+        if(message != null) {
+            template.add(
+                1,
+                TextUnit("Message:", TextUnit.TextSize.SMALL, Align.LEFT)
+                    .setBold(true),
+                1,
+                TextUnit(message, TextUnit.TextSize.SMALL, Align.RIGHT)
+                    .setBold(true)
+            )
+        }
         val businessaccountname = call.argument<String>("businessaccountname")
         if(businessaccountname != null) {
             template.add(
@@ -157,7 +171,7 @@ class print(topWiseDevice : TopWiseDevice, binding: ActivityPluginBinding) {
                 TextUnit("Business Account Name:", TextUnit.TextSize.SMALL, Align.LEFT)
                     .setBold(true),
                 1,
-                TextUnit(stan, TextUnit.TextSize.SMALL, Align.RIGHT)
+                TextUnit(businessaccountname, TextUnit.TextSize.SMALL, Align.RIGHT)
                     .setBold(true)
             )
         }
@@ -479,6 +493,7 @@ class print(topWiseDevice : TopWiseDevice, binding: ActivityPluginBinding) {
 
         val numbers = call.argument<List<MutableMap<String, String>>>("details")!!
         for (number in numbers) {
+            val formattedAmount = NumberFormat.getNumberInstance(Locale.US).format(number.get("amount")) // Format with commas
             template.add(
                 1,
                 TextUnit(number.get("created_at"), TextUnit.TextSize.SMALL, Align.LEFT)

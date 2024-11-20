@@ -23,15 +23,12 @@ class cardpayment(topWiseDevice : TopWiseDevice,result: MethodChannel.Result, bi
     private var binding: ActivityPluginBinding? = null
 
     private val TAG = StringUtil.TAGPUBLIC + CardMoniterService::class.java.simpleName
-    val SEARCH_CARD_TIME: Int = 30000
-    private var mCheckCard: AidlCheckCard? = null
 
     init {
         this.topWiseDevice = topWiseDevice
         this.result = result
         this.binding = binding
 
-        mCheckCard = DeviceTopUsdkServiceManager.instance?.getCheckCard()
     }
 
     /**
