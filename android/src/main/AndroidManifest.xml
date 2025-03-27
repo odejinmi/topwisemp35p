@@ -1,9 +1,8 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.a5starcompany.topwisemp35p">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
         android:name="com.a5starcompany.topwisemp35p.PosApp">
         <service
-            android:name="com.a5starcompany.topwisemp35p.emvreader.card.CardMoniterService"
+            android:name="com.a5starcompany.topwisemp35p.com.lonytech.topwisesdk.emvreader.card.CardMoniterService"
             android:enabled="true" />
 
     </application>

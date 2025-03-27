@@ -9,7 +9,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.1'
+        classpath 'com.android.tools.build:gradle:8.9.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -55,8 +55,7 @@ android {
     }
 
     dependencies {
-        api fileTree(dir: 'libs', include: ['*.jar'])
-        api 'com.beust:klaxon:5.5'
+        implementation project(path: ':topwisesdk')
     }
 
     testOptions {
@@ -70,4 +69,5 @@ android {
             }
         }
     }
+    namespace 'com.a5starcompany.topwisemp35p'
 }

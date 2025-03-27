@@ -1,35 +1,24 @@
 package com.a5starcompany.topwisemp35p
 
-import android.os.RemoteException
 import android.util.Log
-import com.a5starcompany.topwisemp35p.charackterEncoder.BCDASCII
-import com.a5starcompany.topwisemp35p.emvreader.DeviceTopUsdkServiceManager
-import com.a5starcompany.topwisemp35p.emvreader.app.PosApplication
-import com.a5starcompany.topwisemp35p.emvreader.card.CardManager
-import com.a5starcompany.topwisemp35p.emvreader.card.CardMoniterService
-import com.a5starcompany.topwisemp35p.emvreader.card.CheckCardListenerSub
-import com.a5starcompany.topwisemp35p.emvreader.TopWiseDevice
-import com.a5starcompany.topwisemp35p.emvreader.util.Format
-import com.a5starcompany.topwisemp35p.emvreader.util.StringUtil
+import com.lonytech.topwisesdk.charackterEncoder.BCDASCII
+import com.lonytech.topwisesdk.emvreader.DeviceTopUsdkServiceManager
+import com.lonytech.topwisesdk.emvreader.app.PosApplication
+import com.lonytech.topwisesdk.emvreader.card.CardManager
+import com.lonytech.topwisesdk.emvreader.card.CardMoniterService
+import com.lonytech.topwisesdk.emvreader.card.CheckCardListenerSub
+import com.lonytech.topwisesdk.emvreader.TopWiseDevice
+import com.lonytech.topwisesdk.emvreader.util.Format
+import com.lonytech.topwisesdk.emvreader.util.StringUtil
 import com.topwise.cloudpos.aidl.card.AidlCheckCard
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
-class cardpayment(topWiseDevice : TopWiseDevice,result: MethodChannel.Result, binding: ActivityPluginBinding) {
+class cardpayment(val topWiseDevice :TopWiseDevice, val result: MethodChannel.Result, val binding: ActivityPluginBinding) {
 
-    private var topWiseDevice: TopWiseDevice? = null
-    private var result: MethodChannel.Result? = null
-    private var binding: ActivityPluginBinding? = null
+    private val TAG =StringUtil.TAGPUBLIC +CardMoniterService::class.java.simpleName
 
-    private val TAG = StringUtil.TAGPUBLIC + CardMoniterService::class.java.simpleName
-
-    init {
-        this.topWiseDevice = topWiseDevice
-        this.result = result
-        this.binding = binding
-
-    }
 
     /**
      * It is invoked when making transaction
@@ -43,7 +32,7 @@ class cardpayment(topWiseDevice : TopWiseDevice,result: MethodChannel.Result, bi
         }
 
         val amount = call.argument<String>("amount")!!
-        topWiseDevice!!.readCard(amount)
+        topWiseDevice.readCard(amount,"","")
     }
 
     fun enterpin(call: MethodCall) {
@@ -57,7 +46,7 @@ class cardpayment(topWiseDevice : TopWiseDevice,result: MethodChannel.Result, bi
         val pin: ByteArray = BCDASCII.hexStringToBytes(directpin)
 //        val pin = call.argument<String>("pin")!!
         Log.i("TAG", "onConfirmInput(), pin = " + BCDASCII.bytesToHexString(pin))
-        var mCardNo = PosApplication.getApp().mConsumeData?.cardno
+        val mCardNo = PosApplication.getApp().mConsumeData?.cardno
 //        var finalPan = ""
 //        mCardNo?.let {
 //            val numbersOfStars =
@@ -129,7 +118,7 @@ class cardpayment(topWiseDevice : TopWiseDevice,result: MethodChannel.Result, bi
         }
 
         val amount = call.argument<String>("amount")!!
-        topWiseDevice!!.getCardScheme(amount)
+        topWiseDevice.getCardScheme(amount)
 
     }
 

@@ -2,21 +2,9 @@ package com.a5starcompany.topwisemp35p
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.os.RemoteException
-import android.util.Base64
 import android.util.Log
-import com.a5starcompany.topwisemp35p.charackterEncoder.BCDASCII
-import com.a5starcompany.topwisemp35p.emvreader.DeviceTopUsdkServiceManager
-import com.a5starcompany.topwisemp35p.emvreader.TopWiseDevice
-import com.a5starcompany.topwisemp35p.emvreader.app.PosApplication
-import com.a5starcompany.topwisemp35p.emvreader.card.CardManager
-import com.a5starcompany.topwisemp35p.emvreader.card.CardMoniterService
-import com.a5starcompany.topwisemp35p.emvreader.card.CheckCardListenerSub
-import com.a5starcompany.topwisemp35p.emvreader.printer.*
-import com.a5starcompany.topwisemp35p.emvreader.util.Format
-import com.a5starcompany.topwisemp35p.emvreader.util.StringUtil
-import com.topwise.cloudpos.aidl.card.AidlCheckCard
+import com.lonytech.topwisesdk.emvreader.TopWiseDevice
+import com.lonytech.topwisesdk.emvreader.printer.*
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel
@@ -117,7 +105,7 @@ class MethodCallHandlerImpl(
     }
 
     val serialnumber: String
-        get() = DeviceTopUsdkServiceManager.instance?.systemManager?.serialNo!!
+        get() = topWiseDevice.serialnumber
 
 
     val topWiseDevice by lazy {
