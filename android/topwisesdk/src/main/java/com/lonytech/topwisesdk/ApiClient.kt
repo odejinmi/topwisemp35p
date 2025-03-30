@@ -1,4 +1,4 @@
-package com.lonytech.topwisesdk.emvreader
+package com.lonytech.topwisesdk
 
 import android.content.Context
 import android.util.Log

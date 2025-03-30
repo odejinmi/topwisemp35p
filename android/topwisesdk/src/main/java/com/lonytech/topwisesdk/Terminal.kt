@@ -1,4 +1,4 @@
-package com.lonytech.topwisesdk.emvreader
+package com.lonytech.topwisesdk
 
 class Terminal(
     val feeType: String?,
