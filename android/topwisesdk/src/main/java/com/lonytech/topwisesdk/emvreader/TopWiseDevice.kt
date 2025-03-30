@@ -7,15 +7,9 @@ import android.util.Log
 import com.lonytech.topwisesdk.charackterEncoder.BCDASCII
 import com.lonytech.topwisesdk.emvreader.app.PosApplication
 import com.lonytech.topwisesdk.emvreader.card.CardManager
-import com.lonytech.topwisesdk.emvreader.emv.CardReadChannel
-import com.lonytech.topwisesdk.emvreader.emv.CardReadResult
-import com.lonytech.topwisesdk.emvreader.emv.CardReadState
-import com.lonytech.topwisesdk.emvreader.emv.Processor
-import com.lonytech.topwisesdk.emvreader.emv.TransactionMonitor
-import com.topwise.cloudpos.aidl.card.AidlCheckCardListener
-import com.topwise.cloudpos.aidl.magcard.TrackData
-import com.topwise.cloudpos.aidl.printer.AidlPrinter
-import com.topwise.cloudpos.aidl.printer.AidlPrinterListener
+import com.lonytech.topwisesdk.emvreader.emv.*
+import com.topwise.cloudpos.aidl.*
+import com.topwise.cloudpos.aidl.printer.*
 import com.lonytech.topwisesdk.emvreader.printer.PrintTemplate
 import com.lonytech.topwisesdk.emvreader.util.Format
 import kotlinx.coroutines.CoroutineScope
@@ -24,8 +18,6 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 class TopWiseDevice(val context: Context, val terminal: Terminal, callback: (TransactionMonitor) -> Unit) {
     private val callback: (TransactionMonitor) -> Unit
@@ -33,16 +25,21 @@ class TopWiseDevice(val context: Context, val terminal: Terminal, callback: (Tra
         this.callback = callback
     }
 
-    private val printManager: AidlPrinter? = DeviceTopUsdkServiceManager.instance?.printManager
+    private val deviceTopUsdkServiceManager: DeviceTopUsdkServiceManager? = DeviceTopUsdkServiceManager.instance
+    private val printManager: AidlPrinter? = deviceTopUsdkServiceManager?.printManager
 
     fun printDoc(template: PrintTemplate) {
-        printManager?.addRuiImage(template.printBitmap, 0);
+        printManager?.addRuiImage(template.printBitmap, 0)
+        println("error $printManager")
         printManager?.printRuiQueue(object : AidlPrinterListener.Stub() {
             override fun onError(p0: Int) {
+                println("print error")
+                println(p0)
 //                printListener.onError(p0)
             }
 
             override fun onPrintFinish() {
+                println("finished printing")
 //                printListener.onPrintFinish()
             }
 
@@ -123,10 +120,10 @@ class TopWiseDevice(val context: Context, val terminal: Terminal, callback: (Tra
     }
 
     val serialnumber: String
-        get() = DeviceTopUsdkServiceManager.instance?.systemManager?.serialNo!!
+        get() = deviceTopUsdkServiceManager?.systemManager?.serialNo!!
 
 
-    private val mCheckCard by lazy { DeviceTopUsdkServiceManager.instance?.getCheckCard() }
+    private val mCheckCard by lazy { deviceTopUsdkServiceManager?.getCheckCard() }
     val searchCardTime: Int
         get() = 30000
     val job = Job()
