@@ -1,6 +1,9 @@
 package com.lonytech.app
 
 import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -9,7 +12,15 @@ import com.lonytech.topwisesdk.emvreader.Terminal
 import com.lonytech.topwisesdk.emvreader.TopWiseDevice
 
 class MainActivity : AppCompatActivity() {
-    var terminal: Terminal? = null
+    var terminal: Terminal = Terminal(
+        feeBearer = "",
+        feeType = "",
+        flatFee =  "",
+        feeCent =  "",
+        feeCap =  "",
+        terminalId =  "",
+        token =  "",
+    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -20,23 +31,38 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        terminal = Terminal(
-            feeBearer = "",
-            feeType = "",
-            flatFee =  "",
-            feeCent =  "",
-            feeCap =  "",
-            terminalId =  "",
-            token =  "",
-        )
         var cardpayment: cardpayment? = topWiseDevice?.let { cardpayment(it,this) }
         var print: print? = topWiseDevice?.let { print(it,this) }
+        val serial : TextView = findViewById(R.id.textView)
+         println(topWiseDevice?.serialnumber)
+//        serial.text = topWiseDevice?.serialnumber ?: "0";
+        val amount : EditText = findViewById(R.id.editTextNumber)
+        val readcard : Button = findViewById(R.id.button)
+        readcard.setOnClickListener {
+            cardpayment?.makePayment(amount.text.toString())
+        }
+        val printout : Button = findViewById(R.id.button2)
+        printout.setOnClickListener {
+//            cardpayment?.makePayment(amount.text.toString())
+        }
+
+//        terminal = Terminal(
+//            feeBearer = "",
+//            feeType = "",
+//            flatFee =  "",
+//            feeCent =  "",
+//            feeCap =  "",
+//            terminalId =  "",
+//            token =  "",
+//        )
     }
 
 
     val topWiseDevice by lazy {
-        terminal?.let {
-            TopWiseDevice(applicationContext, terminal = it) {
+        terminal.let { terminal ->
+            println("terminal")
+            println(terminal)
+            TopWiseDevice(applicationContext, terminal = terminal) {
                 var map1: MutableMap<String, Any> = mutableMapOf()
                 if (it.transactionData != null) {
                     val transactionData = it.transactionData!!
@@ -95,6 +121,7 @@ class MainActivity : AppCompatActivity() {
                     "status" to it.status,
                     "transactionData" to map1
                 )
+                println(map)
 
             }
         }

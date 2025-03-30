@@ -3,6 +3,7 @@ package com.lonytech.topwisesdk.emvreader
 import android.content.Context
 import android.util.Log
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.*
@@ -15,11 +16,31 @@ import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
+import javax.net.ssl.*
+import javax.security.cert.CertificateException
+
 object ApiClient {
     private const val BASE_URL =  "https://abs.paylony.com/api/v1/"
-    private const val API_KEY = "your_api_key_here"
+    private const val API_KEY = "pos_hash_wv9b8dqovdpmz6r9v47gjtjy"
 
     private val client = OkHttpClient()
+
+    val gson: Gson
+//    val retrofit: Retrofit
+
+    init {
+
+
+        gson = GsonBuilder().setLenient().create()
+
+//        retrofit = Retrofit.Builder()
+//            .baseUrl(BASE_URL)
+//            .client(client)
+//            .addConverterFactory(GsonConverterFactory.create(gson))
+//            .build()
+    }
 
     suspend fun post(endpoint: String, data: Map<String, String?>, context: Context, token: String): JSONObject {
         return withContext(Dispatchers.IO) {

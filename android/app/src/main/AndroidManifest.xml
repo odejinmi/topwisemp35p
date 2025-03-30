@@ -9,6 +9,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Topwisemp35p">
         <activity
+            android:name=".Cardpin"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
