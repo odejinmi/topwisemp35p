@@ -12,11 +12,14 @@ import com.a5starcompany.topwisemp35p.emvreader.printer.PrintTemplate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.nio.charset.StandardCharsets
+import java.security.MessageDigest
 
 class Paylony (val context: Context,  val terminal: Terminal, callback: (TransactionMonitor) -> Unit) {
 
     var transactiontype: String = ""
     var accDetails : String = ""
+    var accountType : String = ""
     fun readCard(amount: String, transactiontype: String, accDetails: String){
         this.transactiontype = transactiontype
         this.accDetails = accDetails
@@ -27,11 +30,20 @@ class Paylony (val context: Context,  val terminal: Terminal, callback: (Transac
         topWiseDevice.printDoc(template)
     }
 
+    fun closeCardReader() {
+        topWiseDevice.closeCardReader()
+    }
+
+    fun getCardScheme(amount: String) {
+        topWiseDevice.getCardScheme(amount)
+    }
+
 //    fun printDoc(template: Bitmap) {
 //        topWiseDevice.printDoc(template)
 //    }
 
-    fun enterpin(directpin: String) {
+    fun enterpin(directpin: String, accountType: String) {
+        this.accountType = accountType
         topWiseDevice.enterpin(directpin)
     }
 
@@ -52,7 +64,7 @@ class Paylony (val context: Context,  val terminal: Terminal, callback: (Transac
                     if (it.transactionData != null) {
                         val transactionData = it.transactionData!!
                         val data = mapOf(
-                            "accountType" to transactionData.amount,
+                            "accountType" to accountType,
                             "amount" to PosApplication.getApp().mConsumeData?.amount, // typed amount
                             "fee" to fees1,
                             "totalAmount" to ((PosApplication.getApp().mConsumeData?.amount?.toIntOrNull()
@@ -101,23 +113,52 @@ class Paylony (val context: Context,  val terminal: Terminal, callback: (Transac
                             "transactionSequenceNumber" to transactionData.transactionSequenceNumber,
                             "transactionType" to transactionData.transactionType,
                             "unifiedPaymentIccData" to transactionData.unifiedPaymentIccData,
-                            "unpredictableNumber" to transactionData.unpredictableNumber
+                            "unpredictableNumber" to transactionData.unpredictableNumber,
+                            "rrn" to terminal.rrn
+                        )
+                        val headers = mapOf(
+                            "Content-Type" to "application/json",
+                            "serialNumber" to serialnumber,
+                            "deviceName" to "MP35P",
+                            "Terminal-Auth" to hashedString(
+                                data["rrn"] ?: "",
+                                terminal.terminalId?:" "
+                            ),
+                            "Authorization" to "Bearer ${terminal.token}",
+                            "timestamp" to ivString
                         )
                         CoroutineScope(Dispatchers.IO).launch {
-                            val response = ApiClient.post(
+//                            val response = ApiClient.post(
+//                                endpoint = "payment/card/debit",
+//                                ivString = ivString,
+//                                context = context,
+//                                data = data,
+//                                headers = headers
+//                            )
+                            val response = HttpJsonParser().makeHttpRequest(
                                 endpoint = "payment/card/debit",
-                                token = terminal.token.toString(),
-                                context = context,
-                                data = data
+                                ivString = ivString,
+                                method = "POST",
+                                params = data,
+                                headers = headers
                             )
-                            Log.d("Response", response.toString())
+
+                            Log.d("Response general", response.toString())
+                            callback.invoke(
+                                TransactionMonitor(
+                                    it.state,
+                                    response?.optString("message", "")!!,
+                                    response?.optBoolean("success", false)!!,
+                                    null
+                                )
+                            )
                         }
 
                     }
                 }else {
                     callback.invoke(
                         TransactionMonitor(
-                            CardReadState.CardData,
+                            it.state,
                             it.message,
                             it.status,
                             it.transactionData
@@ -158,4 +199,21 @@ class Paylony (val context: Context,  val terminal: Terminal, callback: (Transac
                 fees1
             }
         }
+
+
+    private fun hashedString(reference: String,terminalId: String): String {
+        val join = "${terminalId}|${serialnumber}|MP35P|$reference"
+        println("join: $join") // Equivalent to debugPrint
+
+        val digest = MessageDigest.getInstance("SHA-512")
+        val hashBytes = digest.digest(join.toByteArray(StandardCharsets.UTF_8))
+        return hashBytes.joinToString("") { "%02x".format(it) }
+    }
+
+    val ivString = generateRandomString(16)
+
+    fun generateRandomString(length: Int): String {
+        val chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+        return (1..length).map { chars.random() }.joinToString("")
+    }
 }

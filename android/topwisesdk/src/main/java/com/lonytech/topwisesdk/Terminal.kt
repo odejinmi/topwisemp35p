@@ -7,5 +7,6 @@ class Terminal(
     val feeCap: String?,
     val feeBearer: String?,
     val terminalId: String?,
-    val token: String?
+    val token: String?,
+    val rrn: String?
 )
