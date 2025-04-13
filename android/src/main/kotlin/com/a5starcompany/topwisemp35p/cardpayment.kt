@@ -1,15 +1,15 @@
 package com.a5starcompany.topwisemp35p
 
 import android.util.Log
-import com.lonytech.topwisesdk.charackterEncoder.BCDASCII
-import com.lonytech.topwisesdk.emvreader.DeviceTopUsdkServiceManager
-import com.lonytech.topwisesdk.emvreader.app.PosApplication
-import com.lonytech.topwisesdk.emvreader.card.CardManager
-import com.lonytech.topwisesdk.emvreader.card.CardMoniterService
-import com.lonytech.topwisesdk.emvreader.card.CheckCardListenerSub
-import com.lonytech.topwisesdk.emvreader.TopWiseDevice
-import com.lonytech.topwisesdk.emvreader.util.Format
-import com.lonytech.topwisesdk.emvreader.util.StringUtil
+import com.a5starcompany.topwisemp35p.charackterEncoder.BCDASCII
+import com.a5starcompany.topwisemp35p.emvreader.DeviceTopUsdkServiceManager
+import com.a5starcompany.topwisemp35p.emvreader.app.PosApplication
+import com.a5starcompany.topwisemp35p.emvreader.card.CardManager
+import com.a5starcompany.topwisemp35p.emvreader.card.CardMoniterService
+import com.a5starcompany.topwisemp35p.emvreader.card.CheckCardListenerSub
+import com.a5starcompany.topwisemp35p.emvreader.TopWiseDevice
+import com.a5starcompany.topwisemp35p.emvreader.util.Format
+import com.a5starcompany.topwisemp35p.emvreader.util.StringUtil
 import com.topwise.cloudpos.aidl.card.AidlCheckCard
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall

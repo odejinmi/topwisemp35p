@@ -4,8 +4,8 @@ import android.graphics.BitmapFactory
 import android.util.Base64
 import android.util.Log
 import com.a5starcompany.topwisemp35p.emvreader.printer.*
-import com.lonytech.topwisesdk.emvreader.TopWiseDevice
-import com.lonytech.topwisesdk.emvreader.emv.TransactionMonitor
+import com.a5starcompany.topwisemp35p.emvreader.TopWiseDevice
+import com.a5starcompany.topwisemp35p.emvreader.emv.TransactionMonitor
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import java.text.NumberFormat
@@ -26,13 +26,13 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         val decodedBytes = Base64.decode(base64String, Base64.DEFAULT)
         val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
 
-        val template: com.lonytech.topwisesdk.emvreader.printer.PrintTemplate = com.lonytech.topwisesdk.emvreader.printer.PrintTemplate.instance
+        val template: PrintTemplate = PrintTemplate.instance
         template.init(binding!!.activity, null)
         template.clear()
 
         template.add(
-            com.lonytech.topwisesdk.emvreader.printer.ImageUnit(
-                com.lonytech.topwisesdk.emvreader.printer.Align.CENTER,
+            ImageUnit(
+                Align.CENTER,
                 bitmap,
                 550,
                 70
@@ -40,48 +40,48 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         )
 
         template.add(
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 "TRANSACTION RECEIPT",
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.CENTER
+                TextUnit.TextSize.SMALL,
+                Align.CENTER
             )
                 .setBold(true)
         )
 
         val copytype = call.argument<String>("copytype")!!
         template.add(
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 copytype + " Copy",
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.CENTER
+                TextUnit.TextSize.SMALL,
+                Align.CENTER
             )
                 .setBold(true)
         )
         val marchantname: String = call.argument<String>("marchantname")!!
         template.add(
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 marchantname,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.CENTER
+                TextUnit.TextSize.SMALL,
+                Align.CENTER
             )
                 .setBold(true)
         )
         val marchantaddress: String = call.argument<String>("marchantaddress")!!
         template.add(
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 marchantaddress,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.CENTER
+                TextUnit.TextSize.SMALL,
+                Align.CENTER
             )
                 .setBold(true)
         )
         template.add(starttextUnit())
         val transactiontype = call.argument<String>("transactiontype")!!
         template.add(
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 transactiontype,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.CENTER
+                TextUnit.TextSize.SMALL,
+                Align.CENTER
             )
                 .setBold(true)
         )
@@ -89,19 +89,19 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         val amount = call.argument<String>("amount")!!.toDouble() // Convert to Double for formatting
         val formattedAmount = NumberFormat.getNumberInstance(Locale.US).format(amount) // Format with commas
         template.add(
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 "₦$formattedAmount",
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.NORMAL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.CENTER
+                TextUnit.TextSize.NORMAL,
+                Align.CENTER
             )
                 .setBold(true)
         )
         val transactionstatus = call.argument<String>("transactionstatus")!!
         template.add(
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 transactionstatus,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.CENTER
+                TextUnit.TextSize.SMALL,
+                Align.CENTER
             )
                 .setBold(true)
         )
@@ -109,51 +109,51 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         val serialno = call.argument<String>("serialno")!!
         template.add(
             1,
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 "Serial No",
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                TextUnit.TextSize.SMALL,
+                Align.LEFT
             )
                 .setBold(true),
             1,
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 serialno,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                TextUnit.TextSize.SMALL,
+                Align.RIGHT
             )
                 .setBold(true)
         )
         val terminalid = call.argument<String>("terminalid")!!
         template.add(
             1,
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 "Terminal ID",
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                TextUnit.TextSize.SMALL,
+                Align.LEFT
             )
                 .setBold(true),
             1,
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 terminalid,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                TextUnit.TextSize.SMALL,
+                Align.RIGHT
             )
                 .setBold(true)
         )
         val rrn = call.argument<String>("rrn")!!
         template.add(
             1,
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 "RRN:",
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                TextUnit.TextSize.SMALL,
+                Align.LEFT
             )
                 .setBold(true),
             1,
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 rrn,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                TextUnit.TextSize.SMALL,
+                Align.RIGHT
             )
                 .setBold(true)
         )
@@ -161,17 +161,17 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         if(pan != null) {
             template.add(
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     "Card No:",
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                    TextUnit.TextSize.SMALL,
+                    Align.LEFT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     pan,
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true)
             )
@@ -180,17 +180,17 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         if(stan != null) {
             template.add(
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     "STAN:",
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                    TextUnit.TextSize.SMALL,
+                    Align.LEFT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     stan,
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true)
             )
@@ -199,17 +199,17 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         if(message != null) {
             template.add(
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     "Message:",
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                    TextUnit.TextSize.SMALL,
+                    Align.LEFT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     message,
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true)
             )
@@ -218,17 +218,17 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         if(businessaccountname != null) {
             template.add(
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     "Business Account Name:",
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                    TextUnit.TextSize.SMALL,
+                    Align.LEFT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     businessaccountname,
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true)
             )
@@ -237,17 +237,17 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         if(businessaccountnumber != null) {
             template.add(
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     "Business Account Number:",
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                    TextUnit.TextSize.SMALL,
+                    Align.LEFT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     stan,
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true)
             )
@@ -256,17 +256,17 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         if(businessbank != null) {
             template.add(
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     "Business Bank:",
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                    TextUnit.TextSize.SMALL,
+                    Align.LEFT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     stan,
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true)
             )
@@ -275,17 +275,17 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         if(accname != null) {
             template.add(
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     "Acc Name:",
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                    TextUnit.TextSize.SMALL,
+                    Align.LEFT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     accname,
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true)
             )
@@ -294,17 +294,17 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         if(accno != null) {
             template.add(
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     "Acc No:",
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                    TextUnit.TextSize.SMALL,
+                    Align.LEFT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     accno,
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true)
             )
@@ -313,17 +313,17 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         if(bankname != null) {
             template.add(
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     "Bank Name:",
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                    TextUnit.TextSize.SMALL,
+                    Align.LEFT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     bankname,
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true)
             )
@@ -332,17 +332,17 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         if(sessionid != null) {
             template.add(
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     "Session Id:",
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                    TextUnit.TextSize.SMALL,
+                    Align.LEFT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     sessionid,
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true)
             )
@@ -351,17 +351,17 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         if(deviceid != null) {
             template.add(
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     "Device Id:",
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                    TextUnit.TextSize.SMALL,
+                    Align.LEFT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     deviceid,
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true)
             )
@@ -370,17 +370,17 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         if(devicetype != null) {
             template.add(
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     "Device Type:",
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                    TextUnit.TextSize.SMALL,
+                    Align.LEFT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     devicetype,
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true)
             )
@@ -389,17 +389,17 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         if(paymentname != null) {
             template.add(
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     "Payment Name:",
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                    TextUnit.TextSize.SMALL,
+                    Align.LEFT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     paymentname,
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true)
             )
@@ -408,17 +408,17 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         if(paymentcode != null) {
             template.add(
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     "Payment Code:",
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                    TextUnit.TextSize.SMALL,
+                    Align.LEFT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     paymentcode,
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true)
             )
@@ -427,17 +427,17 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         if(Phonenumber != null) {
             template.add(
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     "Phone Number:",
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                    TextUnit.TextSize.SMALL,
+                    Align.LEFT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     Phonenumber,
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true)
             )
@@ -446,17 +446,17 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         if(network != null) {
             template.add(
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     "Network:",
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                    TextUnit.TextSize.SMALL,
+                    Align.LEFT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     network,
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true)
             )
@@ -465,17 +465,17 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         if(description != null) {
             template.add(
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     "Description:",
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                    TextUnit.TextSize.SMALL,
+                    Align.LEFT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     description,
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true)
             )
@@ -484,17 +484,17 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         if(disco != null) {
             template.add(
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     "Disco:",
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                    TextUnit.TextSize.SMALL,
+                    Align.LEFT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     disco,
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true)
             )
@@ -503,17 +503,17 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         if(meteraccname != null) {
             template.add(
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     "Meter Acc Name:",
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                    TextUnit.TextSize.SMALL,
+                    Align.LEFT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     meteraccname,
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true)
             )
@@ -522,17 +522,17 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         if(meterno != null) {
             template.add(
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     "Meter No:",
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                    TextUnit.TextSize.SMALL,
+                    Align.LEFT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     meterno,
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true)
             )
@@ -541,17 +541,17 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         if(token != null) {
             template.add(
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     "Token:",
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                    TextUnit.TextSize.SMALL,
+                    Align.LEFT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     token,
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true)
             )
@@ -560,17 +560,17 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         if(unit != null) {
             template.add(
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     "Unit:",
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                    TextUnit.TextSize.SMALL,
+                    Align.LEFT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     unit,
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true)
             )
@@ -579,17 +579,17 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         if(address != null) {
             template.add(
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     "Address:",
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                    TextUnit.TextSize.SMALL,
+                    Align.LEFT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     address,
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true)
             )
@@ -597,37 +597,37 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         val datetime = call.argument<String>("datetime")!!
         template.add(
             1,
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 "DATE & TIME",
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                TextUnit.TextSize.SMALL,
+                Align.LEFT
             )
                 .setBold(true),
             1,
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 datetime,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                TextUnit.TextSize.SMALL,
+                Align.RIGHT
             )
                 .setBold(true)
         )
         template.add(starttextUnit())
         val bottommessage = call.argument<String>("bottommessage")!!
         template.add(
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 bottommessage,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.CENTER
+                TextUnit.TextSize.SMALL,
+                Align.CENTER
             )
                 .setBold(true)
         )
 
         val appversion = call.argument<String>("appversion")!!
         template.add(
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 "App Version " + appversion,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.CENTER
+                TextUnit.TextSize.SMALL,
+                Align.CENTER
             )
                 .setBold(true)
         )
@@ -650,13 +650,13 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         val decodedBytes = Base64.decode(base64String, Base64.DEFAULT)
         val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
 
-        val template: com.lonytech.topwisesdk.emvreader.printer.PrintTemplate = com.lonytech.topwisesdk.emvreader.printer.PrintTemplate.instance
+        val template: PrintTemplate = PrintTemplate.instance
         template.init(binding!!.activity, null)
         template.clear()
 
         template.add(
-            com.lonytech.topwisesdk.emvreader.printer.ImageUnit(
-                com.lonytech.topwisesdk.emvreader.printer.Align.CENTER,
+            ImageUnit(
+                Align.CENTER,
                 bitmap,
                 550,
                 70
@@ -664,28 +664,28 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         )
 
         template.add(
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 "End of Day summary",
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.CENTER
+                TextUnit.TextSize.SMALL,
+                Align.CENTER
             )
                 .setBold(true)
         )
         val marchantname: String = call.argument<String>("marchantname")!!
         template.add(
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 marchantname,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.CENTER
+                TextUnit.TextSize.SMALL,
+                Align.CENTER
             )
                 .setBold(true)
         )
         val marchantaddress: String = call.argument<String>("marchantaddress")!!
         template.add(
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 marchantaddress,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.CENTER
+                TextUnit.TextSize.SMALL,
+                Align.CENTER
             )
                 .setBold(true)
         )
@@ -693,17 +693,17 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         val datetime = call.argument<String>("datetime")!!
         template.add(
             1,
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 "DATE",
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                TextUnit.TextSize.SMALL,
+                Align.LEFT
             )
                 .setBold(true),
             1,
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 datetime,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                TextUnit.TextSize.SMALL,
+                Align.RIGHT
             )
                 .setBold(true)
         )
@@ -711,31 +711,31 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
 
         template.add(
             1,
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 "Time",
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                TextUnit.TextSize.SMALL,
+                Align.LEFT
             )
                 .setBold(true),
             2,
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 "RRN",
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.CENTER
+                TextUnit.TextSize.SMALL,
+                Align.CENTER
             )
                 .setBold(true),
             1,
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 "Amount",
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                TextUnit.TextSize.SMALL,
+                Align.RIGHT
             )
                 .setBold(true),
             1,
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 "Status",
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                TextUnit.TextSize.SMALL,
+                Align.RIGHT
             )
                 .setBold(true)
         )
@@ -745,31 +745,31 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
             val formattedAmount = NumberFormat.getNumberInstance(Locale.US).format(number.get("amount")) // Format with commas
             template.add(
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     number.get("created_at"),
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                    TextUnit.TextSize.SMALL,
+                    Align.LEFT
                 )
                     .setBold(true),
                 2,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     number.get("ref"),
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     number.get("amount"),
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true),
                 1,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     number.get("status"),
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                    TextUnit.TextSize.SMALL,
+                    Align.RIGHT
                 )
                     .setBold(true)
             )
@@ -778,68 +778,68 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         val totalapproved = call.argument<String>("totalapproved")!!
         template.add(
             1,
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 "Total Approved",
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                TextUnit.TextSize.SMALL,
+                Align.LEFT
             )
                 .setBold(true),
             1,
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 totalapproved,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                TextUnit.TextSize.SMALL,
+                Align.RIGHT
             )
                 .setBold(true)
         )
         val totalfailed = call.argument<String>("totalfailed")!!
         template.add(
             1,
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 "Total Failed",
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                TextUnit.TextSize.SMALL,
+                Align.LEFT
             )
                 .setBold(true),
             1,
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 totalfailed,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                TextUnit.TextSize.SMALL,
+                Align.RIGHT
             )
                 .setBold(true)
         )
         val totalcredit = call.argument<String>("totalcredit")!!
         template.add(
             1,
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 "Total Credit",
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                TextUnit.TextSize.SMALL,
+                Align.LEFT
             )
                 .setBold(true),
             1,
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 totalcredit,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                TextUnit.TextSize.SMALL,
+                Align.RIGHT
             )
                 .setBold(true)
         )
         val totaldebit = call.argument<String>("totaldebit")!!
         template.add(
             1,
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 "Total Debit",
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                TextUnit.TextSize.SMALL,
+                Align.LEFT
             )
                 .setBold(true),
             1,
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 totaldebit,
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                TextUnit.TextSize.SMALL,
+                Align.RIGHT
             )
                 .setBold(true)
         )
@@ -854,7 +854,7 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         val marchantname = call.argument<String>("textprint")
         Log.e("TAG", "startcustomPrint: $marchantname")
         val printmodel = Printmodel.fromJson(marchantname!!)
-        val template: com.lonytech.topwisesdk.emvreader.printer.PrintTemplate = com.lonytech.topwisesdk.emvreader.printer.PrintTemplate.instance
+        val template: PrintTemplate = PrintTemplate.instance
         template.init(binding!!.activity, null)
         template.clear()
 
@@ -878,10 +878,10 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
         val nums = arrayOf(1, 5, 10)
         for (i in nums) {
             template.add(
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+                TextUnit(
                     "",
-                    com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-                    com.lonytech.topwisesdk.emvreader.printer.Align.CENTER
+                    TextUnit.TextSize.SMALL,
+                    Align.CENTER
                 )
             )
         }
@@ -891,24 +891,24 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
 
     }
 
-    private fun imageUnit(i: Datum): com.lonytech.topwisesdk.emvreader.printer.ImageUnit {
+    private fun imageUnit(i: Datum): ImageUnit {
         val base64String = i.image
         val decodedBytes = Base64.decode(base64String, Base64.DEFAULT)
         val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
         return if (i.imageheight == null && i.imagewidth == null) {
-            com.lonytech.topwisesdk.emvreader.printer.ImageUnit(
+            ImageUnit(
                 align(i.align!!), bitmap, bitmap.width, bitmap.height,
             )
         } else if (i.imageheight == null && i.imagewidth != null) {
-            com.lonytech.topwisesdk.emvreader.printer.ImageUnit(
+            ImageUnit(
                 align(i.align!!), bitmap, i.imagewidth, bitmap.height,
             )
         } else if (i.imageheight != null && i.imagewidth == null) {
-            com.lonytech.topwisesdk.emvreader.printer.ImageUnit(
+            ImageUnit(
                 align(i.align!!), bitmap, bitmap.width, i.imageheight,
             )
         } else {
-            com.lonytech.topwisesdk.emvreader.printer.ImageUnit(
+            ImageUnit(
                 align(i.align!!), bitmap, i.imagewidth!!, i.imageheight!!,
             )
 
@@ -917,11 +917,11 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
     }
 
 
-    private fun textUnit(text: Datum): com.lonytech.topwisesdk.emvreader.printer.TextUnit {
+    private fun textUnit(text: Datum): TextUnit {
         return if (text.align == null) {
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(text.text)
+            TextUnit(text.text)
         } else {
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+            TextUnit(
                 text.text,
                 textSize(text.textsize!!),
                 align(text.align)
@@ -932,34 +932,34 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
             .setWordWrap(text.textwrap == true)
 
     }
-    private fun starttextUnit(): com.lonytech.topwisesdk.emvreader.printer.TextUnit {
-        return com.lonytech.topwisesdk.emvreader.printer.TextUnit("*****************************************************")
+    private fun starttextUnit(): TextUnit {
+        return TextUnit("*****************************************************")
             .setWordWrap(false)
             .setBold(true)
 
     }
 
-    private fun spacetextUnit(): com.lonytech.topwisesdk.emvreader.printer.TextUnit {
-        return com.lonytech.topwisesdk.emvreader.printer.TextUnit(
+    private fun spacetextUnit(): TextUnit {
+        return TextUnit(
             "\n\n\n\n\n",
-            com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL,
-            com.lonytech.topwisesdk.emvreader.printer.Align.CENTER
+            TextUnit.TextSize.SMALL,
+            Align.CENTER
         )
 
     }
 
-    private fun align(align: String): com.lonytech.topwisesdk.emvreader.printer.Align {
+    private fun align(align: String): Align {
         return when (align) {
             "center" -> {
-                com.lonytech.topwisesdk.emvreader.printer.Align.CENTER
+                Align.CENTER
             }
 
             "right" -> {
-                com.lonytech.topwisesdk.emvreader.printer.Align.RIGHT
+                Align.RIGHT
             }
 
             else -> {
-                com.lonytech.topwisesdk.emvreader.printer.Align.LEFT
+                Align.LEFT
             }
         }
     }
@@ -967,19 +967,19 @@ class print(val topWiseDevice : TopWiseDevice, val binding: ActivityPluginBindin
     private fun textSize(align: String): Int {
         return when (align) {
             "normal" -> {
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.NORMAL
+                TextUnit.TextSize.NORMAL
             }
 
             "large" -> {
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.LARGE
+                TextUnit.TextSize.LARGE
             }
 
             "small" -> {
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.SMALL
+                TextUnit.TextSize.SMALL
             }
 
             else -> {
-                com.lonytech.topwisesdk.emvreader.printer.TextUnit.TextSize.XLARGE
+                TextUnit.TextSize.XLARGE
             }
         }
     }

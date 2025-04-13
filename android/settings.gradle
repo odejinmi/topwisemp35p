@@ -1,6 +1,5 @@
 rootProject.name = 'topwisemp35p'
 //include ':EmvReader'
 include ':topwisesdk'
-include ':app'
 
 project(':topwisesdk').projectDir = new File(rootProject.projectDir, 'topwisesdk')
