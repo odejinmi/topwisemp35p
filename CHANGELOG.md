@@ -13,4 +13,8 @@
 * customise pin layout added
 * card event listening
 
+## 0.0.7
+* plugin update
+* bug fixed
+
 
