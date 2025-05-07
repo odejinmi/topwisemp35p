@@ -116,11 +116,10 @@ class TopWiseDevice(val context: Context, callback: (TransactionMonitor) -> Unit
     private val coroutineContext = job + Dispatchers.Main
     private val mainScope = MainScope()
     fun closeCardReader() {
-        cancelCheckCard()
         CardManager.instance.stopCardDealService(context)
+        cancelCheckCard()
     }
      fun readCard(amount: String) {
-        CardManager.instance.stopCardDealService(context)
         PosApplication.getApp().mConsumeData?.amount = amount
         PosApplication.getApp().transactionType = PosApplication.CONSUME
         PosApplication.getApp().processor = Processor.INTERSWITCH
@@ -129,13 +128,11 @@ class TopWiseDevice(val context: Context, callback: (TransactionMonitor) -> Unit
     }
 
     fun getCardScheme(amount: String) {
-        CardManager.instance.stopCardDealService(context)
         PosApplication.getApp().transactionType = PosApplication.CARD_SCHEME
         PosApplication.getApp().mConsumeData?.amount = amount
         PosApplication.getApp().processor = Processor.INTERSWITCH
         getScheme()
     }
-    private val SEARCH_CARD_TIME: Int = 30000
 
     private fun read() {
 //        this.callback.invoke(TransactionMonitor(
@@ -186,7 +183,7 @@ class TopWiseDevice(val context: Context, callback: (TransactionMonitor) -> Unit
             override fun searching() {
                 callback.invoke(TransactionMonitor(
                         CardReadState.Loading,
-                        "card time out",
+                        "card loading",
                         true,
                         null as CardReadResult?
                 ))

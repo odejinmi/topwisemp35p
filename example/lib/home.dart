@@ -10,7 +10,6 @@ import 'package:topwisemp35p_example/receipt.dart';
 
 import 'eod.dart';
 
-
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -22,40 +21,46 @@ class _HomeState extends State<Home> {
   String _platformVersion = 'Unknown';
   final _topwisemp35pPlugin = Topwisemp35p();
 
-  var eventresult = { };
+  var eventresult = {};
 
   @override
   void initState() {
     super.initState();
     initPlatformState();
-    _topwisemp35pPlugin.stateStream.listen((values)  async {
+    _topwisemp35pPlugin.stateStream.listen((values) async {
       print(" card state $values");
       // Handle the state change here
       switch (values["state"]) {
         case "Loading":
-          showDialog(context: context, builder: (builder)=> AlertDialog(title: Text("Loading"),));
-          return ;
+          showDialog(
+              context: context,
+              builder: (builder) => AlertDialog(
+                    title: Text("Loading"),
+                  ));
+          return;
         case "CardData":
           eventresult = values;
-          return ;
+          return;
         case "CardReadTimeOut":
-          return ;
+          return;
         case "CallBackError":
-          return ;
+          return;
         case "CallBackCanceled":
-          return ;
+          return;
         case "CallBackTransResult":
-          return ;
+          return;
         case "CardDetected":
           var result = await Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Carpin(amount: "200",)),
+            MaterialPageRoute(
+                builder: (context) => Carpin(
+                      amount: "200",
+                    )),
           );
-          if(result != null){
+          if (result != null) {
             _topwisemp35pPlugin.enterpin(result);
           }
-          return ;
-
+          return;
       }
     });
     start();
@@ -75,8 +80,8 @@ class _HomeState extends State<Home> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      platformVersion =
-          await _topwisemp35pPlugin.deviceserialnumber() ?? 'Unknown platform version';
+      platformVersion = await _topwisemp35pPlugin.deviceserialnumber() ??
+          'Unknown platform version';
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -90,13 +95,14 @@ class _HomeState extends State<Home> {
       _platformVersion = platformVersion;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Plugin example app'),
       ),
-      body: SingleChildScrollView (
+      body: SingleChildScrollView(
         child: Column(
           children: [
             Center(
@@ -104,10 +110,9 @@ class _HomeState extends State<Home> {
             ),
             ElevatedButton(
               onPressed: () async {
-                _topwisemp35pPlugin.initialize("200");
+                _topwisemp35pPlugin.debitcard("200");
               },
               child: const Text("start transaction"),
-
             ),
             ElevatedButton(
               onPressed: () async {
@@ -117,7 +122,6 @@ class _HomeState extends State<Home> {
                 print("tolu result gotting");
               },
               child: const Text("get cardsheme"),
-
             ),
             ElevatedButton(
               onPressed: () {
@@ -138,18 +142,23 @@ class _HomeState extends State<Home> {
                   message: "Incorrect PIN",
                   appversion: "1.5.3",
                   amount: "200",
-                  bottommessage: "Buy Airtime and Pay Electricity bills here anytime!    AnyDAY!", marchantaddress: '', serialno: '',
+                  bottommessage:
+                      "Buy Airtime and Pay Electricity bills here anytime!    AnyDAY!",
+                  marchantaddress: '',
+                  serialno: '',
                 );
-                _topwisemp35pPlugin.startprinting(args).then((value) {print(value);});
+                _topwisemp35pPlugin.startprinting(args).then((value) {
+                  print(value);
+                });
               },
               child: const Text("print withdraw"),
             ),
             ElevatedButton(
               onPressed: () {
                 var args = Print(
-                  rrn:"gfhj",
-                  pan:"fsdgs",
-                  expiry:"fdfs",
+                  rrn: "gfhj",
+                  pan: "fsdgs",
+                  expiry: "fdfs",
                   base64image: base64string,
                   marchantname: "VERDANT MICROFINANCE BANK",
                   datetime: "27 Jan 2023,06:55AM",
@@ -166,15 +175,19 @@ class _HomeState extends State<Home> {
                   message: "Incorrect PIN",
                   appversion: "1.5.3",
                   amount: "200",
-                  bottommessage: "Buy Airtime and Pay Electricity bills here anytime!    AnyDAY!", marchantaddress: '', serialno: '',
+                  bottommessage:
+                      "Buy Airtime and Pay Electricity bills here anytime!    AnyDAY!",
+                  marchantaddress: '',
+                  serialno: '',
                 );
-                _topwisemp35pPlugin.startprinting(args).then((value) {print(value);});
+                _topwisemp35pPlugin.startprinting(args).then((value) {
+                  print(value);
+                });
               },
               child: const Text("print transfer"),
             ),
             ElevatedButton(
               onPressed: () async {
-
                 // var printvalue = [
                 //   {"image":base64string,"align":"center","imagewidth":30, "imageheight":30},
                 //   {"text":[{"text":"MERCHANT NAME", "textsize":"normal","align":"center"}]},
