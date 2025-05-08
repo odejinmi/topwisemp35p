@@ -11,15 +11,8 @@ import io.flutter.plugin.common.MethodCall
 import java.text.NumberFormat
 import java.util.Locale
 
-class print(topWiseDevice : TopWiseDevice, binding: ActivityPluginBinding) {
+class print(val  topWiseDevice : TopWiseDevice,val binding: ActivityPluginBinding) {
 
-    private var topWiseDevice: TopWiseDevice? = null
-    private var  binding: ActivityPluginBinding? = null
-
-    init {
-        this.topWiseDevice = topWiseDevice
-        this.binding = binding
-    }
 
     fun startPrint(call: MethodCall,) {
 
@@ -34,7 +27,7 @@ class print(topWiseDevice : TopWiseDevice, binding: ActivityPluginBinding) {
         val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
 
         val template: PrintTemplate = PrintTemplate.instance
-        template.init(binding!!.activity, null)
+        template.init(binding.activity, null)
         template.clear()
 
         template.add(ImageUnit(Align.CENTER, bitmap, 550, 70))
@@ -417,7 +410,7 @@ class print(topWiseDevice : TopWiseDevice, binding: ActivityPluginBinding) {
 
         template.add(spacetextUnit())
 
-        topWiseDevice!!.printDoc(template) //perform print operation
+        topWiseDevice.printDoc(template) //perform print operation
 
     }
     fun starteodPrint(call: MethodCall) {
@@ -433,7 +426,7 @@ class print(topWiseDevice : TopWiseDevice, binding: ActivityPluginBinding) {
         val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
 
         val template: PrintTemplate = PrintTemplate.instance
-        template.init(binding!!.activity, null)
+        template.init(binding.activity, null)
         template.clear()
 
         template.add(ImageUnit(Align.CENTER, bitmap, 550, 70))
@@ -548,7 +541,7 @@ class print(topWiseDevice : TopWiseDevice, binding: ActivityPluginBinding) {
         )
         template.add(spacetextUnit())
 
-        topWiseDevice!!.printDoc(template) //perform print operation
+        topWiseDevice.printDoc(template) //perform print operation
 
     }
 
@@ -558,7 +551,7 @@ class print(topWiseDevice : TopWiseDevice, binding: ActivityPluginBinding) {
         Log.e("TAG", "startcustomPrint: $marchantname")
         val printmodel = Printmodel.fromJson(marchantname!!)
         val template: PrintTemplate = PrintTemplate.instance
-        template.init(binding!!.activity, null)
+        template.init(binding.activity, null)
         template.clear()
 
         for (i in printmodel) {
@@ -589,7 +582,7 @@ class print(topWiseDevice : TopWiseDevice, binding: ActivityPluginBinding) {
             )
         }
 
-        topWiseDevice!!.printDoc(template) //perform print operation
+        topWiseDevice.printDoc(template) //perform print operation
 
 
     }

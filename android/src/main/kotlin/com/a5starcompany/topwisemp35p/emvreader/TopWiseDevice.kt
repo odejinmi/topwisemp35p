@@ -38,10 +38,36 @@ class TopWiseDevice(val context: Context, callback: (TransactionMonitor) -> Unit
         printManager?.addRuiImage(template.printBitmap, 0);
         printManager?.printRuiQueue(object : AidlPrinterListener.Stub() {
             override fun onError(p0: Int) {
+               val message = when(p0){
+                    0x01-> "printer is out of paper"
+                    0x02-> "printer is experiencing high temperature"
+                    0x03-> "unknown mistake during printing"
+                    0x04-> "printer device is not open"
+                    0x05-> "printer device is currently busy"
+                    0x06-> "width of the bitmap to be printed exceeds the allowed limit"
+                    0x07-> "issue with printing a bitmap"
+                    0x08-> "issue with printing a barcode"
+                    0x09-> "parameter error related to the print job"
+                    0x0A-> "issue with printing text"
+                    0x0B-> "the system is asked to print data with anti-string change check and it fails"
+                   else -> "unknown error"
+               }
+                callback.invoke(TransactionMonitor(
+                    CardReadState.Printer,
+                    message,
+                    false,
+                    null as CardReadResult?
+                ))
 //                printListener.onError(p0)
             }
 
             override fun onPrintFinish() {
+                callback.invoke(TransactionMonitor(
+                    CardReadState.Printer,
+                    "printed successfully",
+                    true,
+                    null as CardReadResult?
+                ))
 //                printListener.onPrintFinish()
             }
 
