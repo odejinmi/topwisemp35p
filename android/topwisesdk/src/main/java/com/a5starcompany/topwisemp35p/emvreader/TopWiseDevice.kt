@@ -23,6 +23,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class TopWiseDevice(val context: Context, callback: (TransactionMonitor) -> Unit) {
     private val callback: (TransactionMonitor) -> Unit
@@ -30,34 +32,47 @@ class TopWiseDevice(val context: Context, callback: (TransactionMonitor) -> Unit
         this.callback = callback
     }
 
-    private val deviceTopUsdkServiceManager: DeviceTopUsdkServiceManager? = DeviceTopUsdkServiceManager.instance
-    private val printManager: AidlPrinter? = deviceTopUsdkServiceManager?.printManager
+    private val printManager: AidlPrinter? = DeviceTopUsdkServiceManager.instance?.printManager
 
     fun printDoc(template: PrintTemplate) {
-        printManager?.addRuiImage(template.printBitmap, 0)
-        println("error $printManager")
+        printManager?.addRuiImage(template.printBitmap, 0);
         printManager?.printRuiQueue(object : AidlPrinterListener.Stub() {
             override fun onError(p0: Int) {
-                println("print error")
-                println(p0)
+               val message = when(p0){
+                    0x01-> "printer is out of paper"
+                    0x02-> "printer is experiencing high temperature"
+                    0x03-> "unknown mistake during printing"
+                    0x04-> "printer device is not open"
+                    0x05-> "printer device is currently busy"
+                    0x06-> "width of the bitmap to be printed exceeds the allowed limit"
+                    0x07-> "issue with printing a bitmap"
+                    0x08-> "issue with printing a barcode"
+                    0x09-> "parameter error related to the print job"
+                    0x0A-> "issue with printing text"
+                    0x0B-> "the system is asked to print data with anti-string change check and it fails"
+                   else -> "unknown error"
+               }
+                callback.invoke(TransactionMonitor(
+                    CardReadState.Printer,
+                    message,
+                    false,
+                    null as CardReadResult?
+                ))
 //                printListener.onError(p0)
             }
 
             override fun onPrintFinish() {
-                println("finished printing")
+                callback.invoke(TransactionMonitor(
+                    CardReadState.Printer,
+                    "printed successfully",
+                    true,
+                    null as CardReadResult?
+                ))
 //                printListener.onPrintFinish()
             }
 
         })
     }
-
-    private val mCheckCard by lazy { DeviceTopUsdkServiceManager.instance?.getCheckCard() }
-    val searchCardTime: Int
-        get() = 30000
-    val job = Job()
-    private val coroutineContext = job + Dispatchers.Main
-    private val mainScope = MainScope()
-
 
     val serialnumber: String
         get() = DeviceTopUsdkServiceManager.instance?.systemManager?.serialNo!!
@@ -120,10 +135,6 @@ class TopWiseDevice(val context: Context, callback: (TransactionMonitor) -> Unit
         CardManager.instance.setImportPin(directpin)
     }
 
-    val serialnumber: String
-        get() = DeviceTopUsdkServiceManager.instance?.systemManager?.serialNo!!
-
-
     private val mCheckCard by lazy { DeviceTopUsdkServiceManager.instance?.getCheckCard() }
     val searchCardTime: Int
         get() = 30000
@@ -131,11 +142,10 @@ class TopWiseDevice(val context: Context, callback: (TransactionMonitor) -> Unit
     private val coroutineContext = job + Dispatchers.Main
     private val mainScope = MainScope()
     fun closeCardReader() {
-        cancelCheckCard()
         CardManager.instance.stopCardDealService(context)
+        cancelCheckCard()
     }
      fun readCard(amount: String) {
-        CardManager.instance.stopCardDealService(context)
         PosApplication.getApp().mConsumeData?.amount = amount
         PosApplication.getApp().transactionType = PosApplication.CONSUME
         PosApplication.getApp().processor = Processor.INTERSWITCH
@@ -144,13 +154,11 @@ class TopWiseDevice(val context: Context, callback: (TransactionMonitor) -> Unit
     }
 
     fun getCardScheme(amount: String) {
-        CardManager.instance.stopCardDealService(context)
         PosApplication.getApp().transactionType = PosApplication.CARD_SCHEME
         PosApplication.getApp().mConsumeData?.amount = amount
         PosApplication.getApp().processor = Processor.INTERSWITCH
         getScheme()
     }
-    private val SEARCH_CARD_TIME: Int = 30000
 
     private fun read() {
 //        this.callback.invoke(TransactionMonitor(
@@ -201,7 +209,7 @@ class TopWiseDevice(val context: Context, callback: (TransactionMonitor) -> Unit
             override fun searching() {
                 callback.invoke(TransactionMonitor(
                         CardReadState.Loading,
-                        "card time out",
+                        "card loading",
                         true,
                         null as CardReadResult?
                 ))

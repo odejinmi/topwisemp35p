@@ -52,14 +52,6 @@ class Paylony (val context: Context,  val terminal: Terminal, callback: (Transac
 
     val topWiseDevice by lazy {
         TopWiseDevice(context) {
-                val map1: MutableMap<String, Any> = mutableMapOf()
-                val map: MutableMap<String, Any> = mutableMapOf(
-                    "state" to it.state.toString(),
-                    "message" to it.message,
-                    "status" to it.status,
-                    "transactionData" to map1
-                )
-                println(map)
                 if (it.state == CardReadState.CardData) {
                     if (it.transactionData != null) {
                         val transactionData = it.transactionData!!
