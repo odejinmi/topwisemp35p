@@ -3,8 +3,8 @@ package com.a5starcompany.topwisemp35p
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.util.Log
-import com.lonytech.topwisesdk.emvreader.TopWiseDevice
-import com.lonytech.topwisesdk.emvreader.printer.*
+import com.a5starcompany.topwisemp35p.emvreader.TopWiseDevice
+import com.a5starcompany.topwisemp35p.emvreader.printer.*
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.EventChannel
